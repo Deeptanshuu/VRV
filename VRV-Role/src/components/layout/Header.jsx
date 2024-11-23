@@ -48,17 +48,24 @@ function Header() {
   return (
     <Box bg={bgColor} px={4} borderBottom="1px" borderColor={borderColor}>
       <Flex h={16} alignItems="center" justifyContent="space-between">
-        <Text fontSize="2xl" fontWeight="semibold" color="white">
+        <Text 
+          fontSize={{ base: "lg", md: "2xl" }} 
+          fontWeight="semibold" 
+          color="white"
+          pl={{ base: 10, md: 0 }}
+          pt={{ base: 2, md: 0 }}
+        >
           Dashboard
         </Text>
 
-        <HStack spacing={4}>
+        <HStack spacing={{ base: 2, md: 4 }}>
           <Tooltip label={`Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`}>
             <IconButton
+              size={{ base: 'sm', md: 'md' }}
               variant="ghost"
               icon={colorMode === 'light' ? 
-                <MoonIcon className="h-5 w-5" /> : 
-                <SunIcon className="h-5 w-5" />
+                <MoonIcon className="h-4 w-4 md:h-5 md:w-5" /> : 
+                <SunIcon className="h-4 w-4 md:h-5 md:w-5" />
               }
               onClick={toggleColorMode}
               aria-label={`Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`}
@@ -69,8 +76,9 @@ function Header() {
 
           <Box position="relative">
             <IconButton
+              size={{ base: 'sm', md: 'md' }}
               variant="ghost"
-              icon={<BellIcon className="h-6 w-6" />}
+              icon={<BellIcon className="h-5 w-5 md:h-6 md:w-6" />}
               aria-label="Notifications"
               color="white"
               _hover={{ bg: hoverBg }}
@@ -88,13 +96,13 @@ function Header() {
             )}
           </Box>
 
-          <Box w="1px" h="8" bg={borderColor} opacity="0.3" />
+          <Box w="1px" h="8" bg={borderColor} opacity="0.3" display={{ base: 'none', md: 'block' }} />
 
           <Menu>
             <MenuButton
               as={Flex}
               bg={activeItemBg}
-              p="2"
+              p={{ base: "1", md: "2" }}
               rounded="lg"
               align="center"
               cursor="pointer"
@@ -103,20 +111,20 @@ function Header() {
             >
               <Flex align="center" minW={{ base: "auto", md: "200px" }}>
                 <Box
-                  w="8"
-                  h="8"
+                  w={{ base: "7", md: "8" }}
+                  h={{ base: "7", md: "8" }}
                   rounded="lg"
                   bg={hoverBg}
                   display="flex"
                   alignItems="center"
                   justifyContent="center"
-                  fontSize="sm"
+                  fontSize={{ base: "xs", md: "sm" }}
                   fontWeight="bold"
                   color="white"
                 >
                   {user?.name?.charAt(0) || 'A'}
                 </Box>
-                <Box ml="3" flex="1">
+                <Box ml="3" flex="1" display={{ base: 'none', md: 'block' }}>
                   <Text fontSize="sm" fontWeight="medium" color="white" noOfLines={1}>
                     {user?.name || 'Admin User'}
                   </Text>
@@ -137,23 +145,23 @@ function Header() {
                 bg={menuItemBg}
                 _hover={{ bg: menuItemHoverBg }}
                 color={menuTextColor}
-                px={4}
-                py={3}
+                px={{ base: 3, md: 4 }}
+                py={{ base: 2, md: 3 }}
                 fontSize="sm"
                 fontWeight="medium"
                 transition="all 0.2s"
               >
                 <Link to="/profile">
-                  <HStack spacing={3}>
+                  <HStack spacing={{ base: 2, md: 3 }}>
                     <Box
-                    p={2}
-                    bg={iconBg}
-                    rounded="md"
-                    color={iconColor}
-                  >
-                    <UserIcon className="h-4 w-4" />
-                  </Box>
-                  <Text>Profile</Text>
+                      p={{ base: 1.5, md: 2 }}
+                      bg={iconBg}
+                      rounded="md"
+                      color={iconColor}
+                    >
+                      <UserIcon className="h-4 w-4" />
+                    </Box>
+                    <Text>Profile</Text>
                   </HStack>
                 </Link>
               </MenuItem>
@@ -162,23 +170,23 @@ function Header() {
                 bg={menuItemBg}
                 _hover={{ bg: menuItemHoverBg }}
                 color={menuTextColor}
-                px={4}
-                py={3}
+                px={{ base: 3, md: 4 }}
+                py={{ base: 2, md: 3 }}
                 fontSize="sm"
                 fontWeight="medium"
                 transition="all 0.2s"
               >
                 <Link to="/settings">
-                  <HStack spacing={3}>
+                  <HStack spacing={{ base: 2, md: 3 }}>
                     <Box
-                    p={2}
-                    bg={iconBg}
-                    rounded="md"
-                    color={iconColor}
-                  >
-                    <Cog6ToothIcon className="h-4 w-4" />
-                  </Box>
-                  <Text>Settings</Text>
+                      p={{ base: 1.5, md: 2 }}
+                      bg={iconBg}
+                      rounded="md"
+                      color={iconColor}
+                    >
+                      <Cog6ToothIcon className="h-4 w-4" />
+                    </Box>
+                    <Text>Settings</Text>
                   </HStack>
                 </Link>
               </MenuItem>
@@ -194,16 +202,16 @@ function Header() {
                   color: 'red.500',
                 }}
                 color={menuTextColor}
-                px={4}
-                py={3}
+                px={{ base: 3, md: 4 }}
+                py={{ base: 2, md: 3 }}
                 fontSize="sm"
                 fontWeight="medium"
                 transition="all 0.2s"
                 onClick={handleLogout}
               >
-                <HStack spacing={3}>
+                <HStack spacing={{ base: 2, md: 3 }}>
                   <Box
-                    p={2}
+                    p={{ base: 1.5, md: 2 }}
                     bg={useColorModeValue('red.50', 'whiteAlpha.100')}
                     rounded="md"
                     color={useColorModeValue('red.500', 'red.300')}

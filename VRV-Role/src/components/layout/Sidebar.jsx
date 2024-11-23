@@ -13,8 +13,6 @@ import {
   DrawerContent,
   DrawerOverlay,
   DrawerCloseButton,
-  DrawerHeader,
-  DrawerBody,
   IconButton,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -202,40 +200,78 @@ function Sidebar() {
     </Box>
   )
 
-  const NavItem = ({ item, isSecondary = false, onClose, activeItemBg, hoverBg }) => (
-    item.onClick ? (
-      <Box
-        as="button"
-        w="full"
-        onClick={() => {
-          item.onClick()
-          onClose()
-        }}
-        className="transition-all duration-200 ease-in-out"
-      >
-        <Flex
-          align="center"
-          px="4"
-          py="3"
-          mx="2"
-          rounded="xl"
-          transition="all 0.3s"
-          _hover={{ bg: hoverBg }}
-          opacity={isSecondary ? 0.8 : 1}
+  const NavItem = ({ item, isSecondary = false, onClose, activeItemBg, hoverBg }) => {
+    const isMobile = window.innerWidth < 768; // Check if we're on mobile
+
+    if (item.onClick) {
+      return (
+        <Box
+          as="button"
+          w="full"
+          onClick={() => {
+            item.onClick();
+            onClose?.();
+          }}
+          className="transition-all duration-200 ease-in-out"
         >
-          <Icon as={item.icon} boxSize="5" color="white" />
-          <Text ml="3" fontSize="sm" fontWeight="medium" color="white">
-            {item.name}
-          </Text>
-        </Flex>
-      </Box>
-    ) : (
+          <Flex
+            align="center"
+            px="4"
+            py="3"
+            mx="2"
+            rounded="xl"
+            transition="all 0.3s"
+            _hover={{ bg: hoverBg }}
+            opacity={isSecondary ? 0.8 : 1}
+          >
+            <Icon as={item.icon} boxSize="5" color="white" />
+            <Text ml="3" fontSize="sm" fontWeight="medium" color="white">
+              {item.name}
+            </Text>
+          </Flex>
+        </Box>
+      );
+    }
+
+    // Use regular anchor tag for mobile
+    if (isMobile) {
+      return (
+        <Box
+          as="a"
+          href={item.href}
+          w="full"
+          className="transition-all duration-200 ease-in-out"
+          onClick={() => {
+            onClose?.();
+          }}
+        >
+          <Flex
+            align="center"
+            px="4"
+            py="3"
+            mx="2"
+            rounded="xl"
+            transition="all 0.3s"
+            _hover={{ bg: hoverBg }}
+            opacity={isSecondary ? 0.8 : 1}
+          >
+            <Icon as={item.icon} boxSize="5" color="white" />
+            <Text ml="3" fontSize="sm" fontWeight="medium" color="white">
+              {item.name}
+            </Text>
+          </Flex>
+        </Box>
+      );
+    }
+
+    // Use NavLink for desktop
+    return (
       <NavLink
         to={item.href}
-        onClick={onClose}
-        className={({ isActive }) =>
-          `w-full transition-all duration-200 ease-in-out`
-        }
+        className="w-full transition-all duration-200 ease-in-out"
+        onClick={() => {
+          onClose?.();
+        }}
       >
         {({ isActive }) => (
           <Flex
@@ -256,8 +292,8 @@ function Sidebar() {
           </Flex>
         )}
       </NavLink>
-    )
-  )
+    );
+  };
 
   // Mobile menu button
   const MobileMenuButton = () => (
@@ -268,11 +304,11 @@ function Sidebar() {
       position="fixed"
       top="4"
       left="4"
-      zIndex="overlay"
+      zIndex={10}
       icon={<Bars3Icon className="h-6 w-6" />}
       aria-label="Open menu"
-      color={useColorModeValue('gray.600', 'gray.200')}
-      _hover={{ bg: useColorModeValue('gray.100', 'gray.700') }}
+      color="white"
+      _hover={{ bg: 'whiteAlpha.200' }}
     />
   )
 
@@ -296,8 +332,8 @@ function Sidebar() {
         onClose={onClose}
         size="full"
       >
-        <DrawerOverlay />
-        <DrawerContent>
+        <DrawerOverlay zIndex={20} />
+        <DrawerContent zIndex={20}>
           <DrawerCloseButton color="white" />
           <SidebarContent onClose={onClose} />
         </DrawerContent>
