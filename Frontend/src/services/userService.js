@@ -1,10 +1,8 @@
 import axios from 'axios'
 
-// In a real application, this would come from environment variables
 const API_URL = 'http://localhost:3000/api'
 const IS_DEVELOPMENT = true
 
-// For development/demo purposes with Indian context
 const MOCK_USERS = [
   { 
     id: 'USR001',
