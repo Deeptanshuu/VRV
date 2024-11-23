@@ -35,13 +35,7 @@ VRV Security is a comprehensive Role-Based Access Control (RBAC) system designed
 
 ### Key Features
 
-#### 1. Authentication System
-- Secure login/logout functionality
-- Role-based access control
-- JWT token-based authentication
-- Protected routes based on user roles
-
-#### 2. User Management
+#### 1. User Management
 - CRUD operations for users
 - Role assignment
 - Department allocation
@@ -49,20 +43,19 @@ VRV Security is a comprehensive Role-Based Access Control (RBAC) system designed
 - Profile management
 - Advanced filtering and search capabilities
 
-#### 3. Department Management
+#### 2. Department Management
 - Department creation and modification
 - Budget tracking and management
 - Employee allocation
 - Department head assignment
 - Location-based organization
 
-#### 4. Role Management
+#### 3. Role Management
 - Role creation and modification
 - Permission assignment
 - Role-based access control
-- Hierarchical role structure
 
-#### 5. Dashboard
+#### 4. Dashboard
 - Interactive analytics
 - Department overview
 - User statistics
@@ -71,5 +64,6 @@ VRV Security is a comprehensive Role-Based Access Control (RBAC) system designed
 - Upcoming events display
 
 ### System Architecture
+
 
 #### Component Structure 
