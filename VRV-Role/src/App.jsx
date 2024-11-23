@@ -10,6 +10,7 @@ import {
 import Layout from './components/layout/Layout'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import Login from './pages/Login'
+import NotFound from './pages/NotFound'
 
 // Lazy load components
 const Dashboard = lazy(() => import('./pages/Dashboard'))
@@ -82,6 +83,8 @@ function App() {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/" element={<Dashboard />} />
               </Route>
+
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
         </Router>
