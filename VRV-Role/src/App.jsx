@@ -20,6 +20,7 @@ const Calendar = lazy(() => import('./pages/Calendar'))
 const Profile = lazy(() => import('./pages/Profile'))
 const Departments = lazy(() => import('./pages/Departments'))
 const EmployeeDashboard = lazy(() => import('./pages/EmployeeDashboard'))
+const Settings = lazy(() => import('./pages/Settings'))
 
 // Theme configuration
 const theme = extendTheme({
@@ -78,6 +79,7 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/departments" element={<Departments />} />
                 <Route path="/employee" element={<EmployeeDashboard />} />
+                <Route path="/settings" element={<Settings />} />
                 <Route path="/" element={<Dashboard />} />
               </Route>
             </Routes>
