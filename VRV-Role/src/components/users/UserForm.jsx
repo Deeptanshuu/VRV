@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   FormControl,
@@ -13,20 +13,44 @@ import {
   InputGroup,
   InputLeftAddon,
 } from '@chakra-ui/react'
+import { roleService } from '../../services/roleService'
 
 function UserForm({ user, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
-    role: user?.role || 'User',
+    role: user?.role || '',
     department: user?.department || '',
     phone: user?.phone || '',
     location: user?.location || '',
     status: user?.status || 'Active',
   })
 
+  const [roles, setRoles] = useState([])
   const [errors, setErrors] = useState({})
   const toast = useToast()
+
+  // Fetch roles when component mounts
+  useEffect(() => {
+    const loadRoles = async () => {
+      try {
+        const rolesData = await roleService.getRoles()
+        setRoles(rolesData)
+        // Set default role if none selected
+        if (!formData.role && rolesData.length > 0) {
+          setFormData(prev => ({ ...prev, role: rolesData[0].name }))
+        }
+      } catch (error) {
+        toast({
+          title: 'Error loading roles',
+          description: 'Could not load available roles',
+          status: 'error',
+          duration: 3000,
+        })
+      }
+    }
+    loadRoles()
+  }, [])
 
   const validateForm = () => {
     const newErrors = {}
@@ -47,8 +71,8 @@ function UserForm({ user, onSubmit, onCancel }) {
     }
 
     // Role validation
-    if (!['User', 'Manager', 'Admin'].includes(formData.role)) {
-      newErrors.role = 'Please select a valid role'
+    if (!formData.role) {
+      newErrors.role = 'Please select a role'
     }
 
     // Department validation
@@ -132,9 +156,12 @@ function UserForm({ user, onSubmit, onCancel }) {
             value={formData.role}
             onChange={handleChange}
           >
-            <option value="User">User</option>
-            <option value="Manager">Manager</option>
-            <option value="Admin">Admin</option>
+            <option value="">Select Role</option>
+            {roles.map((role) => (
+              <option key={role.id} value={role.name}>
+                {role.name}
+              </option>
+            ))}
           </Select>
           <FormErrorMessage>{errors.role}</FormErrorMessage>
         </FormControl>

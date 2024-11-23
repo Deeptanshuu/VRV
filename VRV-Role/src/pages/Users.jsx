@@ -20,6 +20,11 @@ import {
   Card,
   useToast,
   useColorModeValue,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Stack,
+  Select,
 } from '@chakra-ui/react'
 import { 
   PlusIcon, 
@@ -30,6 +35,7 @@ import {
   MapPinIcon,
   CalendarIcon,
   ClockIcon,
+  MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline'
 import { userService } from '../services/userService'
 import Modal from '../components/common/Modal'
@@ -50,6 +56,17 @@ function Users() {
   const headerBg = useColorModeValue('gray.50', 'gray.700')
   const borderColor = useColorModeValue('gray.200', 'gray.600')
   const userIconBg = useColorModeValue('vrv.100', 'vrv.900')
+
+  const [filters, setFilters] = useState({
+    search: '',
+    role: '',
+    status: '',
+    department: '',
+  })
+
+  const departments = ['IT', 'HR', 'Sales', 'Marketing', 'Finance']
+  const roles = ['Admin', 'Manager', 'User']
+  const statuses = ['Active', 'Inactive']
 
   useEffect(() => {
     loadUsers()
@@ -150,11 +167,40 @@ function Users() {
     }
   }
 
+  const filteredUsers = users.filter(user => {
+    const matchesSearch = 
+      filters.search === '' ||
+      user.name.toLowerCase().includes(filters.search.toLowerCase()) ||
+      user.email.toLowerCase().includes(filters.search.toLowerCase()) ||
+      user.id.toLowerCase().includes(filters.search.toLowerCase())
+
+    const matchesRole = 
+      filters.role === '' || 
+      user.role === filters.role
+
+    const matchesStatus = 
+      filters.status === '' || 
+      user.status === filters.status
+
+    const matchesDepartment = 
+      filters.department === '' || 
+      user.department === filters.department
+
+    return matchesSearch && matchesRole && matchesStatus && matchesDepartment
+  })
+
+  const handleFilterChange = (field, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
   return (
     <Box p={8}>
       <Card variant="outline" bg={bgColor} borderColor={borderColor} overflow="hidden">
         <Box px={6} py={4}>
-          <Flex justify="space-between" align="center">
+          <Flex justify="space-between" align="center" mb={6}>
             <Box>
               <Heading size="lg" mb={1}>Users</Heading>
               <Text color={textColor}>Manage system users and their roles</Text>
@@ -167,6 +213,60 @@ function Users() {
               Add User
             </Button>
           </Flex>
+
+          <Stack 
+            direction={{ base: 'column', md: 'row' }} 
+            spacing={4} 
+            mb={6}
+          >
+            <InputGroup maxW={{ base: 'full', md: '300px' }}>
+              <InputLeftElement pointerEvents="none">
+                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+              </InputLeftElement>
+              <Input
+                placeholder="Search users..."
+                value={filters.search}
+                onChange={(e) => handleFilterChange('search', e.target.value)}
+              />
+            </InputGroup>
+
+            <Select
+              placeholder="All Roles"
+              value={filters.role}
+              onChange={(e) => handleFilterChange('role', e.target.value)}
+              maxW={{ base: 'full', md: '200px' }}
+            >
+              {roles.map(role => (
+                <option key={role} value={role}>{role}</option>
+              ))}
+            </Select>
+
+            <Select
+              placeholder="All Statuses"
+              value={filters.status}
+              onChange={(e) => handleFilterChange('status', e.target.value)}
+              maxW={{ base: 'full', md: '200px' }}
+            >
+              {statuses.map(status => (
+                <option key={status} value={status}>{status}</option>
+              ))}
+            </Select>
+
+            <Select
+              placeholder="All Departments"
+              value={filters.department}
+              onChange={(e) => handleFilterChange('department', e.target.value)}
+              maxW={{ base: 'full', md: '200px' }}
+            >
+              {departments.map(dept => (
+                <option key={dept} value={dept}>{dept}</option>
+              ))}
+            </Select>
+          </Stack>
+
+          <Text color={textColor} fontSize="sm" mb={4}>
+            Showing {filteredUsers.length} of {users.length} users
+          </Text>
         </Box>
 
         <Box overflowX="auto">
@@ -188,8 +288,14 @@ function Users() {
                     Loading...
                   </Td>
                 </Tr>
+              ) : filteredUsers.length === 0 ? (
+                <Tr>
+                  <Td colSpan={6} textAlign="center" py={8} borderColor={borderColor}>
+                    No users found matching the filters
+                  </Td>
+                </Tr>
               ) : (
-                users.map((user) => (
+                filteredUsers.map((user) => (
                   <Tr key={user.id}>
                     <Td borderColor={borderColor}>
                       <Text fontFamily="mono" fontSize="sm" color={textColor}>

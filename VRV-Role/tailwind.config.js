@@ -10,7 +10,7 @@ export default {
         'vrv': {
           primary: '#304945',
           secondary: '#3d5b56',
-          light: '#405d58',
+          light: '#304945',
           dark: '#243634',
         }
       },
@@ -19,7 +19,5 @@ export default {
       }
     },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-  ],
+  plugins: [],
 } 

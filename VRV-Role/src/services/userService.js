@@ -76,11 +76,7 @@ const MOCK_USERS = [
 class UserService {
   async getUsers() {
     try {
-      if (IS_DEVELOPMENT) {
-        return Promise.resolve(MOCK_USERS)
-      }
-      const response = await axios.get(`${API_URL}/users`)
-      return response.data
+      return Promise.resolve(MOCK_USERS)
     } catch (error) {
       this.handleError(error)
     }
@@ -88,12 +84,8 @@ class UserService {
 
   async getUserById(id) {
     try {
-      if (IS_DEVELOPMENT) {
-        const user = MOCK_USERS.find(u => u.id === id)
-        return Promise.resolve(user)
-      }
-      const response = await axios.get(`${API_URL}/users/${id}`)
-      return response.data
+      const user = MOCK_USERS.find(u => u.id === id)
+      return Promise.resolve(user)
     } catch (error) {
       this.handleError(error)
     }
@@ -101,19 +93,35 @@ class UserService {
 
   async createUser(userData) {
     try {
-      if (IS_DEVELOPMENT) {
-        const newUser = {
-          id: MOCK_USERS.length + 1,
-          ...userData,
-          status: 'Active'
-        }
-        MOCK_USERS.push(newUser)
-        return Promise.resolve(newUser)
+      // Get the highest ID number and increment by 1
+      const maxId = Math.max(...MOCK_USERS.map(u => parseInt(u.id.replace('USR', ''))))
+      const nextId = maxId + 1
+      // Format the ID with leading zeros
+      const formattedId = `USR${String(nextId).padStart(3, '0')}`
+
+      const newUser = {
+        id: formattedId,
+        ...userData,
+        status: 'Active',
+        joinDate: new Date().toISOString().split('T')[0],
+        lastActive: new Date().toISOString(),
+        permissions: this.getDefaultPermissions(userData.role),
       }
-      const response = await axios.post(`${API_URL}/users`, userData)
-      return response.data
+      MOCK_USERS.push(newUser)
+      return Promise.resolve(newUser)
     } catch (error) {
       this.handleError(error)
+    }
+  }
+
+  getDefaultPermissions(role) {
+    switch (role) {
+      case 'Admin':
+        return ['users.manage', 'roles.manage', 'reports.view', 'reports.create']
+      case 'Manager':
+        return ['users.view', 'reports.view', 'reports.create']
+      default:
+        return ['reports.view']
     }
   }
 

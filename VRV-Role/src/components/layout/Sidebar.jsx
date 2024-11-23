@@ -9,6 +9,14 @@ import {
   Image,
   Divider,
   useColorModeValue,
+  Drawer,
+  DrawerContent,
+  DrawerOverlay,
+  DrawerCloseButton,
+  DrawerHeader,
+  DrawerBody,
+  IconButton,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { 
   HomeIcon, 
@@ -18,16 +26,18 @@ import {
   Cog6ToothIcon,
   ArrowLeftOnRectangleIcon,
   CalendarIcon,
+  Bars3Icon,
 } from '@heroicons/react/24/outline'
 import { authService } from '../../services/authService'
 
 function Sidebar() {
   const navigate = useNavigate()
   const user = authService.getCurrentUser()
-  const bgColor = useColorModeValue('vrv.500', 'gray.800')
-  const borderColor = useColorModeValue('vrv.600', 'gray.700')
-  const activeItemBg = useColorModeValue('vrv.600', 'gray.700')
-  const hoverBg = useColorModeValue('vrv.400', 'gray.600')
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const bgColor = useColorModeValue('#304945', '#243634')
+  const borderColor = useColorModeValue('white', 'gray.700')
+  const activeItemBg = useColorModeValue('#405d58', '#3d5b56')
+  const hoverBg = useColorModeValue('#405d58', '#3d5b56')
   const secondaryTextColor = useColorModeValue('gray.100', 'gray.400')
 
   // Define all possible navigation items
@@ -88,70 +98,16 @@ function Sidebar() {
     },
   ].filter(item => item.roles.includes(user?.role))
 
-  const NavItem = ({ item, isSecondary = false }) => (
-    item.onClick ? (
-      <Box
-        as="button"
-        w="full"
-        onClick={item.onClick}
-        className="transition-all duration-200 ease-in-out"
-      >
-        <Flex
-          align="center"
-          px="4"
-          py="3"
-          mx="2"
-          rounded="xl"
-          transition="all 0.3s"
-          _hover={{ bg: hoverBg }}
-          opacity={isSecondary ? 0.8 : 1}
-        >
-          <Icon as={item.icon} boxSize="5" color="white" />
-          <Text ml="3" fontSize="sm" fontWeight="medium" color="white">
-            {item.name}
-          </Text>
-        </Flex>
-      </Box>
-    ) : (
-      <NavLink
-        to={item.href}
-        className={({ isActive }) =>
-          `w-full transition-all duration-200 ease-in-out`
-        }
-      >
-        {({ isActive }) => (
-          <Flex
-            align="center"
-            px="4"
-            py="3"
-            mx="2"
-            rounded="xl"
-            transition="all 0.3s"
-            bg={isActive ? activeItemBg : 'transparent'}
-            _hover={{ bg: hoverBg }}
-            opacity={isSecondary ? 0.8 : 1}
-          >
-            <Icon as={item.icon} boxSize="5" color="white" />
-            <Text ml="3" fontSize="sm" fontWeight="medium" color="white">
-              {item.name}
-            </Text>
-          </Flex>
-        )}
-      </NavLink>
-    )
-  )
-
-  return (
+  const SidebarContent = ({ onClose: onDrawerClose = () => {} }) => (
     <Box
-      as="aside"
-      w="64"
       bg={bgColor}
       color="white"
-      display={{ base: 'none', md: 'block' }}
       borderRight="1px"
       borderColor={borderColor}
+      h="full"
+      py="5"
     >
-      <Flex direction="column" h="full" py="5">
+      <Flex direction="column" h="full">
         {/* Logo Section */}
         <Flex align="center" px="6" mb="8">
           <Image 
@@ -163,10 +119,10 @@ function Sidebar() {
           />
           <Box ml="3">
             <Text fontSize="lg" fontWeight="bold" letterSpacing="tight">
-              VRV Admin
+              VRV Security
             </Text>
             <Text fontSize="xs" opacity="0.7">
-              Role Management
+              Role Management System
             </Text>
           </Box>
         </Flex>
@@ -177,7 +133,13 @@ function Sidebar() {
             Main Menu
           </Text>
           {mainNavigation.map((item) => (
-            <NavItem key={item.name} item={item} />
+            <NavItem 
+              key={item.name} 
+              item={item} 
+              onClose={onDrawerClose}
+              activeItemBg={activeItemBg}
+              hoverBg={hoverBg}
+            />
           ))}
 
           {/* Secondary Navigation */}
@@ -187,7 +149,14 @@ function Sidebar() {
               System
             </Text>
             {secondaryNavigation.map((item) => (
-              <NavItem key={item.name} item={item} isSecondary />
+              <NavItem 
+                key={item.name} 
+                item={item} 
+                isSecondary 
+                onClose={onDrawerClose}
+                activeItemBg={activeItemBg}
+                hoverBg={hoverBg}
+              />
             ))}
           </Box>
         </VStack>
@@ -214,7 +183,7 @@ function Sidebar() {
               fontSize="sm"
               fontWeight="bold"
             >
-              {user?.name?.charAt(0) || 'A'}
+              {user?.name?.charAt(0) || 'Who dis?'}
             </Box>
             <Box ml="3" flex="1">
               <Text fontSize="sm" fontWeight="medium">{user?.name || 'Admin User'}</Text>
@@ -224,6 +193,109 @@ function Sidebar() {
         </Box>
       </Flex>
     </Box>
+  )
+
+  const NavItem = ({ item, isSecondary = false, onClose, activeItemBg, hoverBg }) => (
+    item.onClick ? (
+      <Box
+        as="button"
+        w="full"
+        onClick={() => {
+          item.onClick()
+          onClose()
+        }}
+        className="transition-all duration-200 ease-in-out"
+      >
+        <Flex
+          align="center"
+          px="4"
+          py="3"
+          mx="2"
+          rounded="xl"
+          transition="all 0.3s"
+          _hover={{ bg: hoverBg }}
+          opacity={isSecondary ? 0.8 : 1}
+        >
+          <Icon as={item.icon} boxSize="5" color="white" />
+          <Text ml="3" fontSize="sm" fontWeight="medium" color="white">
+            {item.name}
+          </Text>
+        </Flex>
+      </Box>
+    ) : (
+      <NavLink
+        to={item.href}
+        onClick={onClose}
+        className={({ isActive }) =>
+          `w-full transition-all duration-200 ease-in-out`
+        }
+      >
+        {({ isActive }) => (
+          <Flex
+            align="center"
+            px="4"
+            py="3"
+            mx="2"
+            rounded="xl"
+            transition="all 0.3s"
+            bg={isActive ? activeItemBg : 'transparent'}
+            _hover={{ bg: hoverBg }}
+            opacity={isSecondary ? (isActive ? 1 : 0.8) : 1}
+          >
+            <Icon as={item.icon} boxSize="5" color="white" />
+            <Text ml="3" fontSize="sm" fontWeight="medium" color="white">
+              {item.name}
+            </Text>
+          </Flex>
+        )}
+      </NavLink>
+    )
+  )
+
+  // Mobile menu button
+  const MobileMenuButton = () => (
+    <IconButton
+      display={{ base: 'flex', md: 'none' }}
+      onClick={onOpen}
+      variant="ghost"
+      position="fixed"
+      top="4"
+      left="4"
+      zIndex="overlay"
+      icon={<Bars3Icon className="h-6 w-6" />}
+      aria-label="Open menu"
+      color={useColorModeValue('gray.600', 'gray.200')}
+      _hover={{ bg: useColorModeValue('gray.100', 'gray.700') }}
+    />
+  )
+
+  return (
+    <>
+      <MobileMenuButton />
+
+      {/* Desktop sidebar */}
+      <Box
+        as="aside"
+        w="64"
+        display={{ base: 'none', md: 'block' }}
+      >
+        <SidebarContent />
+      </Box>
+
+      {/* Mobile drawer */}
+      <Drawer
+        isOpen={isOpen}
+        placement="left"
+        onClose={onClose}
+        size="full"
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton color="white" />
+          <SidebarContent onClose={onClose} />
+        </DrawerContent>
+      </Drawer>
+    </>
   )
 }
 
