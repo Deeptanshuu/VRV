@@ -25,6 +25,9 @@ import {
   Input,
   Select,
   Stack,
+  Spinner,
+  Divider,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import { 
   PlusIcon, 
@@ -37,6 +40,7 @@ import {
 import Modal from '../components/common/Modal'
 import DepartmentForm from '../components/departments/DepartmentForm'
 import { departmentService } from '../services/departmentService'
+import PageHeader from '../components/layout/PageHeader'
 
 function Departments() {
   const [departments, setDepartments] = useState([])
@@ -182,23 +186,123 @@ function Departments() {
   // Get unique locations for filter
   const locations = [...new Set(departments.map(dept => dept.location))]
 
+  // Determine display mode based on screen size
+  const displayMode = useBreakpointValue({ base: 'mobile', md: 'desktop' })
+
+  const renderMobileCard = (department) => (
+    <Card
+      key={department.id}
+      bg={bgColor}
+      borderColor={borderColor}
+      mb={4}
+      overflow="hidden"
+    >
+      <Box p={4}>
+        <Stack spacing={4}>
+          {/* Department Header */}
+          <HStack justify="space-between" align="start">
+            <HStack spacing={3}>
+              <Box
+                bg="vrv.100"
+                p={2}
+                rounded="lg"
+                color="vrv.500"
+              >
+                <BuildingOfficeIcon className="h-5 w-5" />
+              </Box>
+              <Box>
+                <Text fontWeight="medium">{department.name}</Text>
+                <Text fontSize="sm" color={textColor}>{department.id}</Text>
+              </Box>
+            </HStack>
+            <Badge
+              colorScheme={department.status === 'Active' ? 'green' : 'red'}
+              rounded="full"
+              px={2}
+              py={1}
+            >
+              {department.status}
+            </Badge>
+          </HStack>
+
+          <Divider />
+
+          {/* Department Details */}
+          <Stack spacing={3}>
+            <Box>
+              <Text fontSize="sm" color={textColor} mb={1}>Head & Location</Text>
+              <Text fontWeight="medium">{department.head}</Text>
+              <Text fontSize="sm">{department.location}</Text>
+            </Box>
+
+            <Box>
+              <Text fontSize="sm" color={textColor} mb={1}>Employees</Text>
+              <HStack>
+                <UsersIcon className="h-5 w-5 text-gray-400" />
+                <Text>{department.employeeCount}</Text>
+              </HStack>
+            </Box>
+
+            <Box>
+              <Text fontSize="sm" color={textColor} mb={1}>Budget</Text>
+              <Text fontWeight="medium">
+                {formatBudget(department.budgetSpent)} / {formatBudget(department.budget)}
+              </Text>
+              <Progress
+                value={(department.budgetSpent / department.budget) * 100}
+                size="sm"
+                width="100%"
+                colorScheme={
+                  (department.budgetSpent / department.budget) > 0.9
+                    ? 'red'
+                    : (department.budgetSpent / department.budget) > 0.7
+                    ? 'yellow'
+                    : 'green'
+                }
+                rounded="full"
+                mt={1}
+              />
+            </Box>
+          </Stack>
+
+          <Divider />
+
+          {/* Actions */}
+          <HStack justify="flex-end" spacing={2}>
+            <IconButton
+              icon={<PencilSquareIcon className="h-4 w-4" />}
+              variant="ghost"
+              colorScheme="vrv"
+              size="sm"
+              onClick={() => handleEditDepartment(department)}
+              aria-label="Edit department"
+            />
+            <IconButton
+              icon={<TrashIcon className="h-4 w-4" />}
+              variant="ghost"
+              colorScheme="red"
+              size="sm"
+              onClick={() => handleDeleteClick(department)}
+              aria-label="Delete department"
+              isDisabled={department.employeeCount > 0}
+            />
+          </HStack>
+        </Stack>
+      </Box>
+    </Card>
+  )
+
   return (
     <Box p={8}>
       <Card variant="outline" bg={bgColor} borderColor={borderColor} overflow="hidden">
         <Box px={6} py={4}>
-          <Flex justify="space-between" align="center" mb={6}>
-            <Box>
-              <Heading size="lg" mb={1}>Departments</Heading>
-              <Text color={textColor}>Manage organization departments</Text>
-            </Box>
-            <Button
-              leftIcon={<PlusIcon className="h-5 w-5" />}
-              colorScheme="vrv"
-              onClick={handleAddDepartment}
-            >
-              Add Department
-            </Button>
-          </Flex>
+          <PageHeader
+            title="Departments"
+            description="Manage organization departments"
+            buttonLabel="Add Department"
+            buttonIcon={PlusIcon}
+            onButtonClick={handleAddDepartment}
+          />
 
           <Stack 
             direction={{ base: 'column', md: 'row' }} 
@@ -243,118 +347,139 @@ function Departments() {
           </Text>
         </Box>
 
-        <Box overflowX="auto">
-          <Table>
-            <Thead bg={headerBg}>
-              <Tr>
-                <Th borderColor={borderColor}>Department</Th>
-                <Th borderColor={borderColor}>Head & Location</Th>
-                <Th borderColor={borderColor}>Employees</Th>
-                <Th borderColor={borderColor}>Budget</Th>
-                <Th borderColor={borderColor}>Status</Th>
-                <Th borderColor={borderColor}>Actions</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {isLoading ? (
-                <Tr>
-                  <Td colSpan={6} textAlign="center" py={8} borderColor={borderColor}>
-                    Loading...
-                  </Td>
-                </Tr>
-              ) : filteredDepartments.length === 0 ? (
-                <Tr>
-                  <Td colSpan={6} textAlign="center" py={8} borderColor={borderColor}>
-                    No departments found matching the filters
-                  </Td>
-                </Tr>
-              ) : (
-                filteredDepartments.map((department) => (
-                  <Tr key={department.id}>
-                    <Td borderColor={borderColor}>
-                      <HStack spacing={3}>
-                        <Box
-                          bg="vrv.100"
-                          p={2}
-                          rounded="lg"
-                          color="vrv.500"
-                        >
-                          <BuildingOfficeIcon className="h-5 w-5" />
-                        </Box>
-                        <Box>
-                          <Text fontWeight="medium">{department.name}</Text>
-                          <Text fontSize="sm" color={textColor}>{department.id}</Text>
-                        </Box>
-                      </HStack>
-                    </Td>
-                    <Td borderColor={borderColor}>
-                      <VStack align="start" spacing={1}>
-                        <Text fontWeight="medium">{department.head}</Text>
-                        <Text fontSize="sm" color={textColor}>{department.location}</Text>
-                      </VStack>
-                    </Td>
-                    <Td borderColor={borderColor}>
-                      <HStack>
-                        <UsersIcon className="h-5 w-5 text-gray-400" />
-                        <Text>{department.employeeCount}</Text>
-                      </HStack>
-                    </Td>
-                    <Td borderColor={borderColor}>
-                      <VStack align="start" spacing={2}>
-                        <Text fontWeight="medium">
-                          {formatBudget(department.budgetSpent)} / {formatBudget(department.budget)}
-                        </Text>
-                        <Progress
-                          value={(department.budgetSpent / department.budget) * 100}
-                          size="sm"
-                          width="100%"
-                          colorScheme={
-                            (department.budgetSpent / department.budget) > 0.9
-                              ? 'red'
-                              : (department.budgetSpent / department.budget) > 0.7
-                              ? 'yellow'
-                              : 'green'
-                          }
-                          rounded="full"
-                        />
-                      </VStack>
-                    </Td>
-                    <Td borderColor={borderColor}>
-                      <Badge
-                        colorScheme={department.status === 'Active' ? 'green' : 'red'}
-                        rounded="full"
-                        px={2}
-                        py={1}
-                      >
-                        {department.status}
-                      </Badge>
-                    </Td>
-                    <Td borderColor={borderColor}>
-                      <HStack spacing={2}>
-                        <IconButton
-                          icon={<PencilSquareIcon className="h-4 w-4" />}
-                          variant="ghost"
-                          colorScheme="vrv"
-                          size="sm"
-                          onClick={() => handleEditDepartment(department)}
-                          aria-label="Edit department"
-                        />
-                        <IconButton
-                          icon={<TrashIcon className="h-4 w-4" />}
-                          variant="ghost"
-                          colorScheme="red"
-                          size="sm"
-                          onClick={() => handleDeleteClick(department)}
-                          aria-label="Delete department"
-                          isDisabled={department.employeeCount > 0}
-                        />
-                      </HStack>
-                    </Td>
+        {/* Responsive Table/Cards */}
+        <Box>
+          {displayMode === 'desktop' ? (
+            <Box overflowX="auto">
+              <Table>
+                <Thead bg={headerBg}>
+                  <Tr>
+                    <Th borderColor={borderColor}>Department</Th>
+                    <Th borderColor={borderColor}>Head & Location</Th>
+                    <Th borderColor={borderColor}>Employees</Th>
+                    <Th borderColor={borderColor}>Budget</Th>
+                    <Th borderColor={borderColor}>Status</Th>
+                    <Th borderColor={borderColor}>Actions</Th>
                   </Tr>
-                ))
+                </Thead>
+                <Tbody>
+                  {isLoading ? (
+                    <Tr>
+                      <Td colSpan={6} textAlign="center" py={8} borderColor={borderColor}>
+                        <Spinner size="sm" mr={2} />
+                        Loading...
+                      </Td>
+                    </Tr>
+                  ) : filteredDepartments.length === 0 ? (
+                    <Tr>
+                      <Td colSpan={6} textAlign="center" py={8} borderColor={borderColor}>
+                        No departments found matching the filters
+                      </Td>
+                    </Tr>
+                  ) : (
+                    filteredDepartments.map((department) => (
+                      <Tr key={department.id}>
+                        <Td borderColor={borderColor}>
+                          <HStack spacing={3}>
+                            <Box
+                              bg="vrv.100"
+                              p={2}
+                              rounded="lg"
+                              color="vrv.500"
+                            >
+                              <BuildingOfficeIcon className="h-5 w-5" />
+                            </Box>
+                            <Box>
+                              <Text fontWeight="medium">{department.name}</Text>
+                              <Text fontSize="sm" color={textColor}>{department.id}</Text>
+                            </Box>
+                          </HStack>
+                        </Td>
+                        <Td borderColor={borderColor}>
+                          <VStack align="start" spacing={1}>
+                            <Text fontWeight="medium">{department.head}</Text>
+                            <Text fontSize="sm" color={textColor}>{department.location}</Text>
+                          </VStack>
+                        </Td>
+                        <Td borderColor={borderColor}>
+                          <HStack>
+                            <UsersIcon className="h-5 w-5 text-gray-400" />
+                            <Text>{department.employeeCount}</Text>
+                          </HStack>
+                        </Td>
+                        <Td borderColor={borderColor}>
+                          <VStack align="start" spacing={2}>
+                            <Text fontWeight="medium">
+                              {formatBudget(department.budgetSpent)} / {formatBudget(department.budget)}
+                            </Text>
+                            <Progress
+                              value={(department.budgetSpent / department.budget) * 100}
+                              size="sm"
+                              width="100%"
+                              colorScheme={
+                                (department.budgetSpent / department.budget) > 0.9
+                                  ? 'red'
+                                  : (department.budgetSpent / department.budget) > 0.7
+                                  ? 'yellow'
+                                  : 'green'
+                              }
+                              rounded="full"
+                            />
+                          </VStack>
+                        </Td>
+                        <Td borderColor={borderColor}>
+                          <Badge
+                            colorScheme={department.status === 'Active' ? 'green' : 'red'}
+                            rounded="full"
+                            px={2}
+                            py={1}
+                          >
+                            {department.status}
+                          </Badge>
+                        </Td>
+                        <Td borderColor={borderColor}>
+                          <HStack spacing={2}>
+                            <IconButton
+                              icon={<PencilSquareIcon className="h-4 w-4" />}
+                              variant="ghost"
+                              colorScheme="vrv"
+                              size="sm"
+                              onClick={() => handleEditDepartment(department)}
+                              aria-label="Edit department"
+                            />
+                            <IconButton
+                              icon={<TrashIcon className="h-4 w-4" />}
+                              variant="ghost"
+                              colorScheme="red"
+                              size="sm"
+                              onClick={() => handleDeleteClick(department)}
+                              aria-label="Delete department"
+                              isDisabled={department.employeeCount > 0}
+                            />
+                          </HStack>
+                        </Td>
+                      </Tr>
+                    ))
+                  )}
+                </Tbody>
+              </Table>
+            </Box>
+          ) : (
+            <Box px={4} py={2}>
+              {isLoading ? (
+                <Flex justify="center" align="center" py={8}>
+                  <Spinner size="sm" mr={2} />
+                  <Text>Loading...</Text>
+                </Flex>
+              ) : filteredDepartments.length === 0 ? (
+                <Text textAlign="center" py={8} color={textColor}>
+                  No departments found matching the filters
+                </Text>
+              ) : (
+                filteredDepartments.map(renderMobileCard)
               )}
-            </Tbody>
-          </Table>
+            </Box>
+          )}
         </Box>
       </Card>
 

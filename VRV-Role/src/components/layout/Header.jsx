@@ -13,27 +13,32 @@ import {
   useColorMode,
   useColorModeValue,
   Tooltip,
-  Show,
-  Hide,
+  Divider,
 } from '@chakra-ui/react'
-import { 
-  BellIcon, 
-  MoonIcon, 
-  SunIcon,
-  Bars3Icon,
-} from '@heroicons/react/24/outline'
-import { useNavigate } from 'react-router-dom'
+import { BellIcon, MoonIcon, SunIcon, UserIcon, Cog6ToothIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
+import { useNavigate, Link } from 'react-router-dom'
 import { authService } from '../../services/authService'
 
-function Header({ onMobileMenuOpen }) {
+function Header() {
   const navigate = useNavigate()
   const user = authService.getCurrentUser()
   const [notifications] = useState([])
   const { colorMode, toggleColorMode } = useColorMode()
-  const borderColor = useColorModeValue('#3d5b56', '#243634')
+  
+  // Updated color mode values
   const bgColor = useColorModeValue('#304945', '#243634')
+  const borderColor = useColorModeValue('#3d5b56', '#243634')
   const activeItemBg = useColorModeValue('#405d58', '#3d5b56')
   const hoverBg = useColorModeValue('#405d58', '#3d5b56')
+  
+  // Menu specific colors
+  const menuBg = useColorModeValue('white', 'gray.800')
+  const menuBorderColor = useColorModeValue('gray.200', 'gray.700')
+  const menuItemBg = useColorModeValue('white', 'gray.800')
+  const menuItemHoverBg = useColorModeValue('gray.50', 'gray.700')
+  const menuTextColor = useColorModeValue('gray.700', 'gray.200')
+  const iconBg = useColorModeValue('vrv.50', 'whiteAlpha.100')
+  const iconColor = useColorModeValue('vrv.500', 'whiteAlpha.900')
 
   const handleLogout = () => {
     authService.logout()
@@ -43,28 +48,11 @@ function Header({ onMobileMenuOpen }) {
   return (
     <Box bg={bgColor} px={4} borderBottom="1px" borderColor={borderColor}>
       <Flex h={16} alignItems="center" justifyContent="space-between">
-        {/* Mobile Menu Button */}
-        <Show below="md">
-          <IconButton
-            variant="ghost"
-            icon={<Bars3Icon className="h-6 w-6" />}
-            onClick={onMobileMenuOpen}
-            aria-label="Open menu"
-            color="white"
-            _hover={{ bg: hoverBg }}
-          />
-        </Show>
+        <Text fontSize="2xl" fontWeight="semibold" color="white">
+          Dashboard
+        </Text>
 
-        {/* Logo/Title - Hidden on mobile when menu is shown */}
-        <Hide below="md">
-          <Text fontSize="2xl" fontWeight="semibold" color="white">
-            Dashboard
-          </Text>
-        </Hide>
-
-        {/* Right Section */}
-        <HStack spacing={{ base: 2, md: 4 }}>
-          {/* Theme Toggle */}
+        <HStack spacing={4}>
           <Tooltip label={`Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`}>
             <IconButton
               variant="ghost"
@@ -79,33 +67,29 @@ function Header({ onMobileMenuOpen }) {
             />
           </Tooltip>
 
-          {/* Notifications - Hidden on mobile */}
-          <Hide below="md">
-            <Box position="relative">
-              <IconButton
-                variant="ghost"
-                icon={<BellIcon className="h-6 w-6" />}
-                aria-label="Notifications"
-                color="white"
-                _hover={{ bg: hoverBg }}
+          <Box position="relative">
+            <IconButton
+              variant="ghost"
+              icon={<BellIcon className="h-6 w-6" />}
+              aria-label="Notifications"
+              color="white"
+              _hover={{ bg: hoverBg }}
+            />
+            {notifications.length > 0 && (
+              <Badge
+                position="absolute"
+                top={1}
+                right={1}
+                colorScheme="red"
+                variant="solid"
+                borderRadius="full"
+                boxSize={2}
               />
-              {notifications.length > 0 && (
-                <Badge
-                  position="absolute"
-                  top={1}
-                  right={1}
-                  colorScheme="red"
-                  variant="solid"
-                  borderRadius="full"
-                  boxSize={2}
-                />
-              )}
-            </Box>
+            )}
+          </Box>
 
-            <Box w="1px" h="8" bg={borderColor} opacity="0.3" />
-          </Hide>
+          <Box w="1px" h="8" bg={borderColor} opacity="0.3" />
 
-          {/* User Menu */}
           <Menu>
             <MenuButton
               as={Flex}
@@ -132,67 +116,102 @@ function Header({ onMobileMenuOpen }) {
                 >
                   {user?.name?.charAt(0) || 'A'}
                 </Box>
-                {/* User info - Hidden on mobile */}
-                <Hide below="md">
-                  <Box ml="3" flex="1">
-                    <Text fontSize="sm" fontWeight="medium" color="white" noOfLines={1}>
-                      {user?.name || 'Admin User'}
-                    </Text>
-                    <Text fontSize="xs" color="whiteAlpha.800" noOfLines={1}>
-                      {user?.email || 'admin@vrv.com'}
-                    </Text>
-                  </Box>
-                </Hide>
+                <Box ml="3" flex="1">
+                  <Text fontSize="sm" fontWeight="medium" color="white" noOfLines={1}>
+                    {user?.name || 'Admin User'}
+                  </Text>
+                  <Text fontSize="xs" color="whiteAlpha.800" noOfLines={1}>
+                    {user?.email || 'admin@vrv.com'}
+                  </Text>
+                </Box>
               </Flex>
             </MenuButton>
             <MenuList
-              border="1px"
-              borderColor={borderColor}
+              bg={menuBg}
+              borderColor={menuBorderColor}
               shadow="lg"
               py={2}
-              mt={1}
-              bg={useColorModeValue('white', 'gray.800')}
+              overflow="hidden"
             >
               <MenuItem
-                py={2}
+                bg={menuItemBg}
+                _hover={{ bg: menuItemHoverBg }}
+                color={menuTextColor}
                 px={4}
-                _hover={{ bg: useColorModeValue('gray.100', 'gray.700') }}
+                py={3}
+                fontSize="sm"
+                fontWeight="medium"
+                transition="all 0.2s"
               >
-                Profile
+                <Link to="/profile">
+                  <HStack spacing={3}>
+                    <Box
+                    p={2}
+                    bg={iconBg}
+                    rounded="md"
+                    color={iconColor}
+                  >
+                    <UserIcon className="h-4 w-4" />
+                  </Box>
+                  <Text>Profile</Text>
+                  </HStack>
+                </Link>
               </MenuItem>
+
               <MenuItem
-                py={2}
+                bg={menuItemBg}
+                _hover={{ bg: menuItemHoverBg }}
+                color={menuTextColor}
                 px={4}
-                _hover={{ bg: useColorModeValue('gray.100', 'gray.700') }}
+                py={3}
+                fontSize="sm"
+                fontWeight="medium"
+                transition="all 0.2s"
               >
-                Settings
+                <Link to="/settings">
+                  <HStack spacing={3}>
+                    <Box
+                    p={2}
+                    bg={iconBg}
+                    rounded="md"
+                    color={iconColor}
+                  >
+                    <Cog6ToothIcon className="h-4 w-4" />
+                  </Box>
+                  <Text>Settings</Text>
+                  </HStack>
+                </Link>
               </MenuItem>
-              {/* Show notifications in menu on mobile */}
-              <Show below="md">
-                <MenuItem
-                  py={2}
-                  px={4}
-                  _hover={{ bg: useColorModeValue('gray.100', 'gray.700') }}
-                >
-                  Notifications
-                  {notifications.length > 0 && (
-                    <Badge ml={2} colorScheme="red">
-                      {notifications.length}
-                    </Badge>
-                  )}
-                </MenuItem>
-              </Show>
-              <Box px={2} my={1}>
-                <Box h="1px" bg={borderColor} />
+
+              <Box px={3} py={2}>
+                <Divider borderColor={menuBorderColor} />
               </Box>
+
               <MenuItem
-                py={2}
+                bg={menuItemBg}
+                _hover={{ 
+                  bg: useColorModeValue('red.50', 'red.900'),
+                  color: 'red.500',
+                }}
+                color={menuTextColor}
                 px={4}
-                color="red.500"
-                _hover={{ bg: useColorModeValue('red.50', 'red.900') }}
+                py={3}
+                fontSize="sm"
+                fontWeight="medium"
+                transition="all 0.2s"
                 onClick={handleLogout}
               >
-                Sign out
+                <HStack spacing={3}>
+                  <Box
+                    p={2}
+                    bg={useColorModeValue('red.50', 'whiteAlpha.100')}
+                    rounded="md"
+                    color={useColorModeValue('red.500', 'red.300')}
+                  >
+                    <ArrowLeftOnRectangleIcon className="h-4 w-4" />
+                  </Box>
+                  <Text>Sign out</Text>
+                </HStack>
               </MenuItem>
             </MenuList>
           </Menu>

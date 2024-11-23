@@ -2,7 +2,7 @@ const MOCK_USERS = [
   {
     email: 'admin@vrv.com',
     password: 'admin123',
-    name: 'Admin User',
+    name: 'Admin',
     role: 'Admin',
     department: 'IT',
   },
@@ -31,10 +31,12 @@ class AuthService {
         )
         
         if (user) {
-          const { password, ...userWithoutPassword } = user
+          const userWithoutPassword = {
+            ...user,
+            password: undefined
+          }
           const token = `mock-jwt-token-${user.role.toLowerCase()}`
           
-          // Store auth data
           localStorage.setItem('user', JSON.stringify(userWithoutPassword))
           localStorage.setItem('token', token)
           

@@ -1,39 +1,31 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import { ChakraProvider, ColorModeScript, extendTheme } from '@chakra-ui/react'
+import { Suspense, lazy } from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { 
+  ChakraProvider, 
+  ColorModeScript, 
+  Spinner, 
+  Center,
+  extendTheme 
+} from '@chakra-ui/react'
 import Layout from './components/layout/Layout'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
-import Users from './pages/Users'
-import Roles from './pages/Roles'
-import RoleRoute from './components/auth/RoleRoute'
-import EmployeeDashboard from './pages/EmployeeDashboard'
-import Analytics from './pages/Analytics'
-import { authService } from './services/authService'
-import Settings from './pages/Settings'
-import Calendar from './pages/Calendar'
-import Departments from './pages/Departments'
-import './App.css'
 
-const config = {
-  initialColorMode: 'light',
-  useSystemColorMode: false,
-}
+// Lazy load components
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const Users = lazy(() => import('./pages/Users'))
+const Roles = lazy(() => import('./pages/Roles'))
+const Analytics = lazy(() => import('./pages/Analytics'))
+const Calendar = lazy(() => import('./pages/Calendar'))
+const Profile = lazy(() => import('./pages/Profile'))
+const Departments = lazy(() => import('./pages/Departments'))
+const EmployeeDashboard = lazy(() => import('./pages/EmployeeDashboard'))
 
+// Theme configuration
 const theme = extendTheme({
-  config,
-  fonts: {
-    heading: '"Space Grotesk", system-ui, sans-serif',
-    body: '"Space Grotesk", system-ui, sans-serif',
-  },
-  styles: {
-    global: (props) => ({
-      body: {
-        bg: props.colorMode === 'dark' ? 'gray.900' : 'gray.50',
-        color: props.colorMode === 'dark' ? 'white' : 'gray.800',
-        fontFamily: '"Space Grotesk", system-ui, sans-serif',
-      },
-    }),
+  config: {
+    initialColorMode: 'light',
+    useSystemColorMode: false,
   },
   colors: {
     vrv: {
@@ -49,55 +41,18 @@ const theme = extendTheme({
       900: '#000000',
     },
   },
-  components: {
-    Card: {
-      baseStyle: (props) => ({
-        container: {
-          bg: props.colorMode === 'dark' ? 'gray.800' : 'white',
-          borderColor: props.colorMode === 'dark' ? 'gray.700' : 'gray.200',
-        },
-      }),
-    },
-    Table: {
-      variants: {
-        simple: (props) => ({
-          th: {
-            borderColor: props.colorMode === 'dark' ? 'gray.700' : 'gray.200',
-            color: props.colorMode === 'dark' ? 'gray.400' : 'gray.500',
-          },
-          td: {
-            borderColor: props.colorMode === 'dark' ? 'gray.700' : 'gray.200',
-          },
-        }),
-      },
-    },
-    Button: {
-      defaultProps: {
-        colorScheme: 'vrv',
-      },
-    },
-    Modal: {
-      baseStyle: (props) => ({
-        dialog: {
-          bg: props.colorMode === 'dark' ? 'gray.800' : 'white',
-        },
-      }),
-    },
-    Menu: {
-      baseStyle: (props) => ({
-        list: {
-          bg: props.colorMode === 'dark' ? 'gray.800' : 'white',
-          borderColor: props.colorMode === 'dark' ? 'gray.700' : 'gray.200',
-        },
-        item: {
-          _hover: {
-            bg: props.colorMode === 'dark' ? 'gray.700' : 'gray.100',
-          },
-        },
-      }),
-    },
+  fonts: {
+    heading: '"Space Grotesk", sans-serif',
+    body: '"Space Grotesk", sans-serif',
   },
 })
+
+// Loading fallback component
+const LoadingFallback = () => (
+  <Center h="100vh">
+    <Spinner size="xl" color="vrv.500" thickness="4px" />
+  </Center>
+)
 
 function App() {
   return (
@@ -105,102 +60,32 @@ function App() {
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <ChakraProvider theme={theme}>
         <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            
-            <Route
-              element={
-                <ProtectedRoute>
-                  <Layout />
-                </ProtectedRoute>
-              }
-            >
-              {/* Admin and Manager Routes */}
-              <Route
-                path="/users"
-                element={
-                  <RoleRoute allowedRoles={['Admin', 'Manager']}>
-                    <Users />
-                  </RoleRoute>
-                }
-              />
-              <Route
-                path="/roles"
-                element={
-                  <RoleRoute allowedRoles={['Admin']}>
-                    <Roles />
-                  </RoleRoute>
-                }
-              />
-              <Route
-                path="/departments"
-                element={
-                  <RoleRoute allowedRoles={['Admin', 'Manager']}>
-                    <Departments />
-                  </RoleRoute>
-                }
-              />
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/login" element={<Login />} />
               
-              {/* Analytics Route */}
               <Route
-                path="/analytics"
                 element={
-                  <RoleRoute allowedRoles={['Admin', 'Manager']}>
-                    <Analytics />
-                  </RoleRoute>
+                  <ProtectedRoute>
+                    <Layout />
+                  </ProtectedRoute>
                 }
-              />
-              
-              {/* Employee Dashboard */}
-              <Route
-                path="/employee"
-                element={
-                  <RoleRoute allowedRoles={['Employee']}>
-                    <EmployeeDashboard />
-                  </RoleRoute>
-                }
-              />
-
-              {/* Settings Route */}
-              <Route
-                path="/settings"
-                element={<Settings />}
-              />
-
-              {/* Calendar Route - accessible to all */}
-              <Route
-                path="/calendar"
-                element={<Calendar />}
-              />
-
-              {/* Default Route */}
-              <Route
-                path="/"
-                element={
-                  <DefaultRoute />
-                }
-              />
-            </Route>
-          </Routes>
+              >
+                <Route path="/users" element={<Users />} />
+                <Route path="/roles" element={<Roles />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/calendar" element={<Calendar />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/departments" element={<Departments />} />
+                <Route path="/employee" element={<EmployeeDashboard />} />
+                <Route path="/" element={<Dashboard />} />
+              </Route>
+            </Routes>
+          </Suspense>
         </Router>
       </ChakraProvider>
     </>
   )
-}
-
-// Helper component for default route logic
-function DefaultRoute() {
-  const user = authService.getCurrentUser()
-  
-  if (!user) {
-    return <Navigate to="/login" replace />
-  }
-
-  if (['Admin', 'Manager'].includes(user.role)) {
-    return <Dashboard />
-  }
-
-  return <EmployeeDashboard />
 }
 
 export default App

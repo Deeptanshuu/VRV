@@ -1,18 +1,43 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react({
-    jsxImportSource: '@emotion/react',
-    babel: {
-      plugins: ['@emotion/babel-plugin']
-    }
-  })],
-  resolve: {
-    dedupe: ['@chakra-ui/react', '@emotion/react', '@emotion/styled']
+  base: '/',
+  plugins: [react()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'chakra-vendor': ['@chakra-ui/react', '@emotion/react', '@emotion/styled'],
+          'chart-vendor': ['recharts'],
+          'calendar-vendor': [
+            '@fullcalendar/react',
+            '@fullcalendar/daygrid',
+            '@fullcalendar/timegrid',
+            '@fullcalendar/interaction'
+          ],
+          'icons': ['@heroicons/react'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
+    sourcemap: true,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
   },
   optimizeDeps: {
-    include: ['@chakra-ui/react', '@emotion/react', '@emotion/styled']
+    include: [
+      'react', 
+      'react-dom', 
+      'react-router-dom', 
+      '@chakra-ui/react',
+      'recharts'
+    ],
   }
 })

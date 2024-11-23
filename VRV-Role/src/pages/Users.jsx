@@ -25,6 +25,9 @@ import {
   InputLeftElement,
   Stack,
   Select,
+  Divider,
+  useBreakpointValue,
+  Spinner,
 } from '@chakra-ui/react'
 import { 
   PlusIcon, 
@@ -41,6 +44,7 @@ import { userService } from '../services/userService'
 import Modal from '../components/common/Modal'
 import UserForm from '../components/users/UserForm'
 import { format, formatDistanceToNow } from 'date-fns'
+import PageHeader from '../components/layout/PageHeader'
 
 function Users() {
   const [users, setUsers] = useState([])
@@ -67,6 +71,8 @@ function Users() {
   const departments = ['IT', 'HR', 'Sales', 'Marketing', 'Finance']
   const roles = ['Admin', 'Manager', 'User']
   const statuses = ['Active', 'Inactive']
+
+  const displayMode = useBreakpointValue({ base: 'mobile', md: 'desktop' })
 
   useEffect(() => {
     loadUsers()
@@ -196,23 +202,112 @@ function Users() {
     }))
   }
 
+  const renderMobileCard = (user) => (
+    <Card
+      key={user.id}
+      bg={bgColor}
+      borderColor={borderColor}
+      mb={4}
+      overflow="hidden"
+    >
+      <Box p={4}>
+        <Stack spacing={4}>
+          {/* User Header */}
+          <HStack justify="space-between" align="start">
+            <HStack spacing={3}>
+              <Box
+                bg={userIconBg}
+                p={2}
+                rounded="lg"
+                color="vrv.500"
+              >
+                <UserCircleIcon className="h-5 w-5" />
+              </Box>
+              <Box>
+                <Text fontWeight="medium">{user.name}</Text>
+                <Text fontSize="sm" color={textColor}>{user.email}</Text>
+              </Box>
+            </HStack>
+            <Badge
+              colorScheme={user.status === 'Active' ? 'green' : 'red'}
+              rounded="full"
+              px={2}
+              py={1}
+            >
+              {user.status}
+            </Badge>
+          </HStack>
+
+          <Divider />
+
+          {/* User Details */}
+          <Stack spacing={3}>
+            <Box>
+              <Text fontSize="sm" color={textColor} mb={1}>Role & Department</Text>
+              <Badge
+                colorScheme={
+                  user.role === 'Admin' 
+                    ? 'purple' 
+                    : user.role === 'Manager' 
+                      ? 'blue' 
+                      : 'gray'
+                }
+                mb={1}
+              >
+                {user.role}
+              </Badge>
+              <Text fontSize="sm">{user.department}</Text>
+            </Box>
+
+            <Box>
+              <Text fontSize="sm" color={textColor} mb={1}>Contact</Text>
+              <Text fontSize="sm">📞 {user.phone}</Text>
+              <Text fontSize="sm">📍 {user.location}</Text>
+            </Box>
+
+            <Box>
+              <Text fontSize="sm" color={textColor} mb={1}>Join Date</Text>
+              <Text fontSize="sm">{formatDate(user.joinDate)}</Text>
+            </Box>
+          </Stack>
+
+          <Divider />
+
+          {/* Actions */}
+          <HStack justify="flex-end" spacing={2}>
+            <IconButton
+              icon={<PencilSquareIcon className="h-4 w-4" />}
+              variant="ghost"
+              colorScheme="vrv"
+              size="sm"
+              onClick={() => handleEditUser(user)}
+              aria-label="Edit user"
+            />
+            <IconButton
+              icon={<TrashIcon className="h-4 w-4" />}
+              variant="ghost"
+              colorScheme="red"
+              size="sm"
+              onClick={() => handleDeleteClick(user)}
+              aria-label="Delete user"
+            />
+          </HStack>
+        </Stack>
+      </Box>
+    </Card>
+  )
+
   return (
     <Box p={8}>
       <Card variant="outline" bg={bgColor} borderColor={borderColor} overflow="hidden">
         <Box px={6} py={4}>
-          <Flex justify="space-between" align="center" mb={6}>
-            <Box>
-              <Heading size="lg" mb={1}>Users</Heading>
-              <Text color={textColor}>Manage system users and their roles</Text>
-            </Box>
-            <Button
-              leftIcon={<PlusIcon className="h-5 w-5" />}
-              colorScheme="vrv"
-              onClick={handleAddUser}
-            >
-              Add User
-            </Button>
-          </Flex>
+          <PageHeader
+            title="Users"
+            description="Manage system users and their roles"
+            buttonLabel="Add User"
+            buttonIcon={PlusIcon}
+            onButtonClick={handleAddUser}
+          />
 
           <Stack 
             direction={{ base: 'column', md: 'row' }} 
@@ -269,138 +364,157 @@ function Users() {
           </Text>
         </Box>
 
-        <Box overflowX="auto">
-          <Table>
-            <Thead bg={headerBg}>
-              <Tr>
-                <Th borderColor={borderColor}>User ID</Th>
-                <Th borderColor={borderColor}>User Info</Th>
-                <Th borderColor={borderColor}>Contact</Th>
-                <Th borderColor={borderColor}>Role & Status</Th>
-                <Th borderColor={borderColor}>Activity</Th>
-                <Th borderColor={borderColor}>Actions</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {isLoading ? (
-                <Tr>
-                  <Td colSpan={6} textAlign="center" py={8} borderColor={borderColor}>
-                    Loading...
-                  </Td>
-                </Tr>
-              ) : filteredUsers.length === 0 ? (
-                <Tr>
-                  <Td colSpan={6} textAlign="center" py={8} borderColor={borderColor}>
-                    No users found matching the filters
-                  </Td>
-                </Tr>
-              ) : (
-                filteredUsers.map((user) => (
-                  <Tr key={user.id}>
-                    <Td borderColor={borderColor}>
-                      <Text fontFamily="mono" fontSize="sm" color={textColor}>
-                        {user.id}
-                      </Text>
-                    </Td>
-                    <Td borderColor={borderColor}>
-                      <HStack spacing={3}>
-                        <Box
-                          bg={userIconBg}
-                          p={2}
-                          rounded="lg"
-                          color="vrv.500"
-                        >
-                          <UserCircleIcon className="h-5 w-5" />
-                        </Box>
-                        <Box>
-                          <Text fontWeight="medium">{user.name}</Text>
-                          <Text fontSize="sm" color={textColor}>{user.email}</Text>
-                          <HStack spacing={2} mt={1}>
-                            <Badge colorScheme="vrv" fontSize="xs">
-                              {user.department}
-                            </Badge>
-                            <Badge colorScheme="gray" fontSize="xs">
-                              {user.location}
-                            </Badge>
-                          </HStack>
-                        </Box>
-                      </HStack>
-                    </Td>
-                    <Td borderColor={borderColor}>
-                      <VStack align="start" spacing={2}>
-                        <HStack fontSize="sm" color={textColor}>
-                          <PhoneIcon className="h-4 w-4" />
-                          <Text>{user.phone}</Text>
-                        </HStack>
-                        <HStack fontSize="sm" color={textColor}>
-                          <MapPinIcon className="h-4 w-4" />
-                          <Text>{user.location}</Text>
-                        </HStack>
-                      </VStack>
-                    </Td>
-                    <Td borderColor={borderColor}>
-                      <VStack align="start" spacing={2}>
-                        <Badge
-                          colorScheme={
-                            user.role === 'Admin' 
-                              ? 'purple' 
-                              : user.role === 'Manager' 
-                                ? 'blue' 
-                                : 'gray'
-                          }
-                          rounded="full"
-                          px={2}
-                          py={1}
-                        >
-                          {user.role}
-                        </Badge>
-                        <Badge
-                          colorScheme={user.status === 'Active' ? 'green' : 'red'}
-                          rounded="full"
-                          px={2}
-                          py={1}
-                        >
-                          {user.status}
-                        </Badge>
-                      </VStack>
-                    </Td>
-                    <Td borderColor={borderColor}>
-                      <VStack align="start" spacing={2}>
-                        <HStack fontSize="sm" color={textColor}>
-                          <CalendarIcon className="h-4 w-4" />
-                          <Text>Joined {formatDate(user.joinDate)}</Text>
-                        </HStack>
-                        <HStack fontSize="sm" color={textColor}>
-                          <ClockIcon className="h-4 w-4" />
-                          <Text>Active {formatLastActive(user.lastActive)}</Text>
-                        </HStack>
-                      </VStack>
-                    </Td>
-                    <Td borderColor={borderColor}>
-                      <HStack spacing={2}>
-                        <IconButton
-                          icon={<PencilSquareIcon className="h-4 w-4" />}
-                          variant="ghost"
-                          colorScheme="vrv"
-                          size="sm"
-                          onClick={() => handleEditUser(user)}
-                          aria-label="Edit user"
-                        />
-                        <IconButton
-                          icon={<TrashIcon className="h-4 w-4" />}
-                          variant="ghost"
-                          colorScheme="red"
-                          size="sm"
-                          onClick={() => handleDeleteClick(user)}
-                          aria-label="Delete user"
-                        />
-                      </HStack>
-                    </Td>
+        <Box>
+          {displayMode === 'desktop' ? (
+            <Box overflowX="auto">
+              <Table>
+                <Thead bg={headerBg}>
+                  <Tr>
+                    <Th borderColor={borderColor}>User ID</Th>
+                    <Th borderColor={borderColor}>User Info</Th>
+                    <Th borderColor={borderColor}>Contact</Th>
+                    <Th borderColor={borderColor}>Role & Status</Th>
+                    <Th borderColor={borderColor}>Activity</Th>
+                    <Th borderColor={borderColor}>Actions</Th>
                   </Tr>
-                ))
+                </Thead>
+                <Tbody>
+                  {isLoading ? (
+                    <Tr>
+                      <Td colSpan={6} textAlign="center" py={8} borderColor={borderColor}>
+                        Loading...
+                      </Td>
+                    </Tr>
+                  ) : filteredUsers.length === 0 ? (
+                    <Tr>
+                      <Td colSpan={6} textAlign="center" py={8} borderColor={borderColor}>
+                        No users found matching the filters
+                      </Td>
+                    </Tr>
+                  ) : (
+                    filteredUsers.map((user) => (
+                      <Tr key={user.id}>
+                        <Td borderColor={borderColor}>
+                          <Text fontFamily="mono" fontSize="sm" color={textColor}>
+                            {user.id}
+                          </Text>
+                        </Td>
+                        <Td borderColor={borderColor}>
+                          <HStack spacing={3}>
+                            <Box
+                              bg={userIconBg}
+                              p={2}
+                              rounded="lg"
+                              color="vrv.500"
+                            >
+                              <UserCircleIcon className="h-5 w-5" />
+                            </Box>
+                            <Box>
+                              <Text fontWeight="medium">{user.name}</Text>
+                              <Text fontSize="sm" color={textColor}>{user.email}</Text>
+                              <HStack spacing={2} mt={1}>
+                                <Badge colorScheme="vrv" fontSize="xs">
+                                  {user.department}
+                                </Badge>
+                                <Badge colorScheme="gray" fontSize="xs">
+                                  {user.location}
+                                </Badge>
+                              </HStack>
+                            </Box>
+                          </HStack>
+                        </Td>
+                        <Td borderColor={borderColor}>
+                          <VStack align="start" spacing={2}>
+                            <HStack fontSize="sm" color={textColor}>
+                              <PhoneIcon className="h-4 w-4" />
+                              <Text>{user.phone}</Text>
+                            </HStack>
+                            <HStack fontSize="sm" color={textColor}>
+                              <MapPinIcon className="h-4 w-4" />
+                              <Text>{user.location}</Text>
+                            </HStack>
+                          </VStack>
+                        </Td>
+                        <Td borderColor={borderColor}>
+                          <VStack align="start" spacing={2}>
+                            <Badge
+                              colorScheme={
+                                user.role === 'Admin' 
+                                  ? 'purple' 
+                                  : user.role === 'Manager' 
+                                    ? 'blue' 
+                                    : 'gray'
+                              }
+                              rounded="full"
+                              px={2}
+                              py={1}
+                            >
+                              {user.role}
+                            </Badge>
+                            <Badge
+                              colorScheme={user.status === 'Active' ? 'green' : 'red'}
+                              rounded="full"
+                              px={2}
+                              py={1}
+                            >
+                              {user.status}
+                            </Badge>
+                          </VStack>
+                        </Td>
+                        <Td borderColor={borderColor}>
+                          <VStack align="start" spacing={2}>
+                            <HStack fontSize="sm" color={textColor}>
+                              <CalendarIcon className="h-4 w-4" />
+                              <Text>Joined {formatDate(user.joinDate)}</Text>
+                            </HStack>
+                            <HStack fontSize="sm" color={textColor}>
+                              <ClockIcon className="h-4 w-4" />
+                              <Text>Active {formatLastActive(user.lastActive)}</Text>
+                            </HStack>
+                          </VStack>
+                        </Td>
+                        <Td borderColor={borderColor}>
+                          <HStack spacing={2}>
+                            <IconButton
+                              icon={<PencilSquareIcon className="h-4 w-4" />}
+                              variant="ghost"
+                              colorScheme="vrv"
+                              size="sm"
+                              onClick={() => handleEditUser(user)}
+                              aria-label="Edit user"
+                            />
+                            <IconButton
+                              icon={<TrashIcon className="h-4 w-4" />}
+                              variant="ghost"
+                              colorScheme="red"
+                              size="sm"
+                              onClick={() => handleDeleteClick(user)}
+                              aria-label="Delete user"
+                            />
+                          </HStack>
+                        </Td>
+                      </Tr>
+                    ))
+                  )}
+                </Tbody>
+              </Table>
+            </Box>
+          ) : (
+            <Box px={4} py={2}>
+              {isLoading ? (
+                <Flex justify="center" align="center" py={8}>
+                  <Spinner size="sm" mr={2} />
+                  <Text>Loading...</Text>
+                </Flex>
+              ) : filteredUsers.length === 0 ? (
+                <Text textAlign="center" py={8} color={textColor}>
+                  No users found matching the filters
+                </Text>
+              ) : (
+                filteredUsers.map(renderMobileCard)
               )}
-            </Tbody>
-          </Table>
+            </Box>
+          )}
         </Box>
       </Card>
 
