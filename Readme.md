@@ -53,15 +53,18 @@ Start the frontend
 ## Demo Credentials
 Admin
 
-admin@vrv.com / admin123
+admin@vrv.com 
+admin123
 
 Manager
 
-manager@vrv.com / manager123
+manager@vrv.com 
+manager123
 
 Employee
 
-employee@vrv.com / employee123
+employee@vrv.com 
+employee123
 
 ### Key Features
 
