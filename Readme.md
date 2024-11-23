@@ -68,33 +68,28 @@ employee123
 
 ### Key Features
 
-#### 1. User Management
-- CRUD operations for users
-- Role assignment
-- Department allocation
-- Status management (Active/Inactive)
-- Profile management
-- Advanced filtering and search capabilities
+1. **User Management:**
+    - Provide a way to view and manage users.
+    - Include options to add, edit, or delete users.
+    - Enable assigning roles to users and managing their status (e.g., Active/Inactive).
 
-#### 2. Department Management
-- Department creation and modification
-- Budget tracking and management
-- Employee allocation
-- Department head assignment
-- Location-based organization
+2. **Role Management:**
+    - Create a way to define and edit roles.
+    - Allow roles to include permissions (e.g., Read, Write, Delete) or custom attributes.
+3. **Dynamic Permissions:**
+    - Design a method to assign or modify permissions for roles.
+    - Display permissions clearly for ease of understanding and modification.
+4. **Custom API Simulation (Optional):**
+    - Mock API calls for CRUD operations on users and roles.
+    - Simulate server responses to validate functionality.
 
-#### 3. Role Management
-- Role creation and modification
-- Permission assignment
-- Role-based access control
-
-#### 4. Dashboard
-- Interactive analytics
-- Department overview
-- User statistics
-- Budget utilization charts
-- Recent activity tracking
-- Upcoming events display
+5. **Dashboard**
+    - Interactive analytics
+    - Department overview
+    - User statistics
+    - Budget utilization charts
+    - Recent activity tracking
+    - Upcoming events display
 
 ### System Architecture
 
