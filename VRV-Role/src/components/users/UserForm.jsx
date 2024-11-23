@@ -14,6 +14,7 @@ import {
   InputLeftAddon,
 } from '@chakra-ui/react'
 import { roleService } from '../../services/roleService'
+import { departmentService } from '../../services/departmentService'
 
 function UserForm({ user, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
@@ -27,6 +28,7 @@ function UserForm({ user, onSubmit, onCancel }) {
   })
 
   const [roles, setRoles] = useState([])
+  const [departments, setDepartments] = useState([])
   const [errors, setErrors] = useState({})
   const toast = useToast()
 
@@ -50,6 +52,23 @@ function UserForm({ user, onSubmit, onCancel }) {
       }
     }
     loadRoles()
+  }, [])
+
+  useEffect(() => {
+    const loadDepartments = async () => {
+      try {
+        const deptData = await departmentService.getDepartments()
+        setDepartments(deptData.filter(dept => dept.status === 'Active'))
+      } catch (error) {
+        toast({
+          title: 'Error loading departments',
+          description: 'Could not load available departments',
+          status: 'error',
+          duration: 3000,
+        })
+      }
+    }
+    loadDepartments()
   }, [])
 
   const validateForm = () => {
@@ -80,11 +99,12 @@ function UserForm({ user, onSubmit, onCancel }) {
       newErrors.department = 'Department is required'
     }
 
-    // Phone validation (optional)
+    // Phone validation
     if (formData.phone) {
-      const phoneRegex = /^\+?[\d\s-]{10,}$/
-      if (!phoneRegex.test(formData.phone)) {
-        newErrors.phone = 'Please enter a valid phone number'
+      // Remove any non-digit characters
+      const phoneDigits = formData.phone.replace(/\D/g, '')
+      if (phoneDigits.length !== 10) {
+        newErrors.phone = 'Phone number must be exactly 10 digits'
       }
     }
 
@@ -114,7 +134,18 @@ function UserForm({ user, onSubmit, onCancel }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    
+    // Special handling for phone numbers
+    if (name === 'phone') {
+      // Remove any non-digit characters
+      const phoneDigits = value.replace(/\D/g, '')
+      // Limit to 10 digits
+      const truncatedPhone = phoneDigits.slice(0, 10)
+      setFormData(prev => ({ ...prev, [name]: truncatedPhone }))
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }))
+    }
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: undefined }))
@@ -174,11 +205,11 @@ function UserForm({ user, onSubmit, onCancel }) {
             onChange={handleChange}
           >
             <option value="">Select Department</option>
-            <option value="IT">IT</option>
-            <option value="HR">HR</option>
-            <option value="Sales">Sales</option>
-            <option value="Marketing">Marketing</option>
-            <option value="Finance">Finance</option>
+            {departments.map((dept) => (
+              <option key={dept.id} value={dept.name}>
+                {dept.name}
+              </option>
+            ))}
           </Select>
           <FormErrorMessage>{errors.department}</FormErrorMessage>
         </FormControl>
@@ -189,10 +220,12 @@ function UserForm({ user, onSubmit, onCancel }) {
             <InputLeftAddon>+1</InputLeftAddon>
             <Input
               name="phone"
+              type="tel"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="(555) 123-4567"
-              onBlur={() => validateForm()}
+              placeholder="Enter 10-digit number"
+              maxLength={10}
+              pattern="\d{10}"
             />
           </InputGroup>
           <FormErrorMessage>{errors.phone}</FormErrorMessage>

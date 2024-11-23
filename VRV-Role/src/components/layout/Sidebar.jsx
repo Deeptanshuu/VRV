@@ -27,6 +27,7 @@ import {
   ArrowLeftOnRectangleIcon,
   CalendarIcon,
   Bars3Icon,
+  BuildingOfficeIcon,
 } from '@heroicons/react/24/outline'
 import { authService } from '../../services/authService'
 
@@ -71,6 +72,12 @@ function Sidebar() {
       href: '/calendar', 
       icon: CalendarIcon,
       roles: ['Admin', 'Manager', 'Employee']
+    },
+    { 
+      name: 'Departments', 
+      href: '/departments', 
+      icon: BuildingOfficeIcon,
+      roles: ['Admin', 'Manager']
     },
   ]
 

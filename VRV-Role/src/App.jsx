@@ -12,6 +12,7 @@ import Analytics from './pages/Analytics'
 import { authService } from './services/authService'
 import Settings from './pages/Settings'
 import Calendar from './pages/Calendar'
+import Departments from './pages/Departments'
 import './App.css'
 
 const config = {
@@ -128,6 +129,14 @@ function App() {
                 element={
                   <RoleRoute allowedRoles={['Admin']}>
                     <Roles />
+                  </RoleRoute>
+                }
+              />
+              <Route
+                path="/departments"
+                element={
+                  <RoleRoute allowedRoles={['Admin', 'Manager']}>
+                    <Departments />
                   </RoleRoute>
                 }
               />
