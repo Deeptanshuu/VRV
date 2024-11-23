@@ -1,5 +1,7 @@
 # VRV Security - Role Management System
-## Internship Project Documentation
+
+### Project Overview
+VRV Security is a comprehensive Role-Based Access Control (RBAC) system designed to manage organizational hierarchies, user roles, and departmental structures. The system provides a secure and intuitive interface for managing employee access and organizational resources.
 
 ## Screenshots
 ![image](https://github.com/user-attachments/assets/b44117ac-6a81-4c75-a611-5931325d3bd8)
@@ -8,10 +10,6 @@
 ![image](https://github.com/user-attachments/assets/8681ef42-d783-4b12-9666-4e8bb33b2775)
 ![image](https://github.com/user-attachments/assets/9872dd82-9583-476a-9cd8-4ed7d427d4ce)
 
-
-
-### Project Overview
-VRV Security is a comprehensive Role-Based Access Control (RBAC) system designed to manage organizational hierarchies, user roles, and departmental structures. The system provides a secure and intuitive interface for managing employee access and organizational resources.
 
 ### Technology Stack
 - **Frontend Framework**: React.js with Vite
