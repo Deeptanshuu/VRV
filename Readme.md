@@ -12,8 +12,6 @@ VRV Security is a comprehensive Role-Based Access Control (RBAC) system designed
 ![image](https://github.com/user-attachments/assets/439aaa82-7c66-434a-bdd7-8c0b1a5818c4)
 
 
-
-
 ### Technology Stack
 - **Frontend Framework**: React.js with Vite
 - **UI Components**: Chakra UI
@@ -25,6 +23,33 @@ VRV Security is a comprehensive Role-Based Access Control (RBAC) system designed
 - **State Management**: React Hooks
 - **Build Tool**: Vite
 - **Package Manager**: npm
+
+
+## Run Locally
+
+Clone the project
+
+```bash
+  git clone https://github.com/Deeptanshuu/VRV/
+```
+
+Go to the project directory
+
+```bash
+  cd my-project
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Start the frontend
+
+```bash
+  npm run dev
+```
 
 ### Key Features
 
