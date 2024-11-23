@@ -69,25 +69,27 @@ employee123
 ### Key Features
 
 1. **User Management:**
-    - Provide a way to view and manage users.
-    - Include options to add, edit, or delete users.
-    - Enable assigning roles to users and managing their status (e.g., Active/Inactive).
+    - View and manage users.
+    - Included options to add, edit, or delete users.
+    - Enabled assigning roles to users and managing their status (e.g., Active/Inactive).
+    - Used tables to display data in a easy digestable form.
 
 2. **Role Management:**
-    - Create a way to define and edit roles.
-    - Allow roles to include permissions (e.g., Read, Write, Delete) or custom attributes.
-3. **Dynamic Permissions:**
-    - Design a method to assign or modify permissions for roles.
-    - Display permissions clearly for ease of understanding and modification.
-4. **Custom API Simulation (Optional):**
-    - Mock API calls for CRUD operations on users and roles.
-    - Simulate server responses to validate functionality.
+    - Implemented a way to define and edit roles.
+    - Allows roles to include permissions (e.g., Read, Write, Delete) or custom attributes.
 
-5. **Dashboard**
+3. **Dynamic Permissions:**
+    - Implemented a method to assign or modify permissions for roles.
+    - Displayed permissions clearly for ease of understanding and modification.
+
+4. **Custom API Simulation:**
+    - Mock API calls for CRUD operations on auth, users and roles.
+    - Mock Server responses to validate functionality ie user login etc.
+
+5. **Dashboard:**
     - Interactive analytics
     - Department overview
     - User statistics
-    - Budget utilization charts
     - Recent activity tracking
     - Upcoming events display
 
