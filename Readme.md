@@ -8,7 +8,6 @@ A comprehensive Role-Based Access Control (RBAC) system built with React, Tailwi
 ### Screenshots
 ![image](https://github.com/user-attachments/assets/717cd7d2-9aac-4d50-be83-1ecdd2b72948)
 ![image](https://github.com/user-attachments/assets/ac87dfb6-8ed3-4fbe-adbf-62ab87474fc4)
-![image](https://github.com/user-attachments/assets/6d3d9d70-2614-4415-865b-c7410f8ba292)
 ![image](https://github.com/user-attachments/assets/0d88432b-6436-4c94-93bc-6c1e3f58ac89)
 ![image](https://github.com/user-attachments/assets/b5ef9443-ee19-4f6b-9f12-666adc477033)
 ![image](https://github.com/user-attachments/assets/439aaa82-7c66-434a-bdd7-8c0b1a5818c4)
