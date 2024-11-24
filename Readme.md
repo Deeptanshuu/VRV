@@ -147,7 +147,7 @@ State Management
 
 ```
 ├── Authentication
-│   ├── JWT Token Management
+│   ├── JWT Token Management (Simulated)
 │   ├── Role Verification
 │   └── Session Handling
 ├── Authorization
