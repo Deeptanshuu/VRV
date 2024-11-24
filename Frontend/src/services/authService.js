@@ -59,7 +59,9 @@ class AuthService {
   }
 
   isAuthenticated() {
-    return !!localStorage.getItem('token')
+    const token = localStorage.getItem('token')
+    const user = this.getCurrentUser()
+    return !!token && !!user
   }
 
   hasRole(roles) {

@@ -4,6 +4,24 @@
 
 A comprehensive Role-Based Access Control (RBAC) system built with React, TailwindCSS and Chakra UI, designed to manage organizational hierarchies, user roles, and departmental structures. The system provides a intuitive interface for managing employee access and organizational resources.
 
+### Website Link - [Visit Deployed Website](https://hire-me-vrv.vercel.app)
+
+## Demo Credentials
+Admin
+
+admin@vrv.com 
+admin123
+
+Manager
+
+manager@vrv.com 
+manager123
+
+Employee
+
+employee@vrv.com 
+employee123
+
 
 ### Screenshots
 ![image](https://github.com/user-attachments/assets/717cd7d2-9aac-4d50-be83-1ecdd2b72948)
@@ -52,21 +70,6 @@ Start the frontend
 ```bash
   npm run dev
 ```
-## Demo Credentials
-Admin
-
-admin@vrv.com 
-admin123
-
-Manager
-
-manager@vrv.com 
-manager123
-
-Employee
-
-employee@vrv.com 
-employee123
 
 ### Key Features
 

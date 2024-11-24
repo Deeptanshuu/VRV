@@ -8,7 +8,6 @@ import {
   MenuList,
   MenuItem,
   Text,
-  Badge,
   HStack,
   useColorMode,
   useColorModeValue,
@@ -107,6 +106,8 @@ function Header() {
   const clearNotifications = () => {
     setNotifications([])
   }
+
+  const hoverBgColor = useColorModeValue('gray.50', 'gray.700')
 
   return (
     <Box bg={bgColor} px={4} borderBottom="1px" borderColor={borderColor}>
@@ -211,7 +212,7 @@ function Header() {
                           key={notification.id}
                           p={4}
                           bg={notification.isRead ? 'transparent' : 'vrv.50'}
-                          _hover={{ bg: useColorModeValue('gray.50', 'gray.700') }}
+                          _hover={{ bg: hoverBgColor }}
                           cursor="pointer"
                           onClick={() => handleNotificationClick(notification.id)}
                           borderBottomWidth="1px"
