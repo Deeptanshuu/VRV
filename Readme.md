@@ -24,6 +24,7 @@ A comprehensive Role-Based Access Control (RBAC) system built with React, Tailwi
 - **State Management**: React Hooks
 - **Build Tool**: Vite
 - **Package Manager**: npm
+- Made in like 8 hours please have mercy
 
 
 ## Run Locally
@@ -37,7 +38,7 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd Frontend
 ```
 
 Install dependencies
