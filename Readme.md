@@ -9,18 +9,18 @@ A comprehensive Role-Based Access Control (RBAC) system built with React, Tailwi
 ### Demo Credentials
 Admin
 
-admin@vrv.com 
-admin123
+email - admin@vrv.com 
+password - admin123
 
 Manager
 
-manager@vrv.com 
-manager123
+email - manager@vrv.com 
+password - manager123
 
 Employee
 
-employee@vrv.com 
-employee123
+email - employee@vrv.com 
+password - employee123
 
 
 ### Screenshots
