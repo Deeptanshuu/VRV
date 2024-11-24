@@ -198,8 +198,8 @@ function Sidebar() {
               {user?.name?.charAt(0) || 'Who dis?'}
             </Box>
             <Box ml="3" flex="1">
-              <Text fontSize="sm" fontWeight="medium">{user?.name || 'Admin User'}</Text>
-              <Text fontSize="xs" opacity="0.7">{user?.email || 'admin@vrv.com'}</Text>
+              <Text fontSize="sm" fontWeight="medium">{user?.name || 'who dis?'}</Text>
+              <Text fontSize="xs" opacity="0.7">{user?.email || 'who dis?@who.dis'}</Text>
             </Box>
           </Flex>
         </Box>

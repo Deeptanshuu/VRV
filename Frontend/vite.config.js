@@ -17,7 +17,7 @@ export default defineConfig({
             '@fullcalendar/timegrid',
             '@fullcalendar/interaction'
           ],
-          'icons': ['@heroicons/react'],
+          'icons': ['@chakra-ui/icons'],
         },
       },
     },

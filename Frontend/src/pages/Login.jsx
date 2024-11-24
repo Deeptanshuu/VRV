@@ -128,7 +128,7 @@ function Login() {
         display={{ base: 'none', lg: 'flex' }}
         w="50%"
         h="100%"
-        bg={useColorModeValue('#ffffff', '#1a2a28')}
+        bg={useColorModeValue('#ffffff', 'gray.800')}
         position="relative"
         flexDirection="column"
         justifyContent="center"
@@ -159,7 +159,7 @@ function Login() {
           >
             Welcome to VRV Security
           </Heading>
-          <Divider opacity={0.2} />
+          <Divider opacity={1} />
           <Text 
             fontSize="xl" 
             color={useColorModeValue('gray.700', 'gray.100')} 
@@ -200,7 +200,7 @@ function Login() {
             bottom: 0,
             background: useColorModeValue(
               'linear-gradient(to top, #1a2a28, #1d2e2b, #1f322f, #223633, #243a36, #263e3a, #28423d, #2a4641, #2c4a45, #2e4e49, #30524c, #325650)',
-              'gray.900'
+              '#1a2a28'
             ),
             backdropFilter: 'blur(100px)',
             zIndex: 0
@@ -208,14 +208,14 @@ function Login() {
         }}
       >
         <Card
-          bg={useColorModeValue('white', 'rgba(26, 42, 40, 0.7)')}
+          bg={useColorModeValue('white', 'gray.800')}
           w={{ base: 'full', md: '600px' }}
           maxW="100%"
-          position="relative"
+          position="relative"s
           boxShadow="xl"
           borderRadius="xl"
           border="1px solid"
-          borderColor="#304945"
+          borderColor={useColorModeValue('black', '#243634')}
           p={{ base: 4, md: 8 }}
           backdropFilter="blur(10px)"
           zIndex={1}
