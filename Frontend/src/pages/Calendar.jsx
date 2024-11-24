@@ -156,7 +156,7 @@ function Calendar() {
 
   return (
     <Box p={8}>
-      <Card variant="outline" bg={bgColor} borderColor={borderColor} overflow="hidden">
+      <Card variant="outline" bg={bgColor} border="1px solid" borderColor="#304945" overflow="hidden">
         <Box px={6} py={4}>
           <PageHeader
             title="Calendar"
@@ -188,7 +188,8 @@ function Calendar() {
           {/* Calendar Card */}
           <Card
             bg={bgColor}
-            borderColor={borderColor}
+            border="1px solid"
+            borderColor="#304945"
             shadow="sm"
             p={{ base: 2, md: 6 }}
             h="calc(100vh - 200px)"

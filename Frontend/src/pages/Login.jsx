@@ -198,7 +198,10 @@ function Login() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: useColorModeValue(  'linear-gradient(to top, #559269, #4f8b67, #4a8465, #457d63, #417660, #3e705d, #3b6a5a, #386457, #365d53, #33564f, #32504a, #304945)', 'gray.900'),
+            background: useColorModeValue(
+              'linear-gradient(to top, #1a2a28, #1d2e2b, #1f322f, #223633, #243a36, #263e3a, #28423d, #2a4641, #2c4a45, #2e4e49, #30524c, #325650)',
+              'gray.900'
+            ),
             backdropFilter: 'blur(100px)',
             zIndex: 0
           }
@@ -212,7 +215,7 @@ function Login() {
           boxShadow="xl"
           borderRadius="xl"
           border="1px solid"
-          borderColor={useColorModeValue('rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.1)')}
+          borderColor="#304945"
           p={{ base: 4, md: 8 }}
           backdropFilter="blur(10px)"
           zIndex={1}
@@ -253,7 +256,7 @@ function Login() {
                   color={alertColor}
                   backdropFilter="blur(8px)"
                   border="1px solid"
-                  borderColor={borderColor}
+                  borderColor="#304945"
                 >
                   <AlertIcon color={alertIconColor} />
                   <Box flex="1">

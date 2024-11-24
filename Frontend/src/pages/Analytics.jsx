@@ -139,7 +139,7 @@ function Analytics() {
 
   return (
     <Box p={8}>
-      <Card variant="outline" bg={bgColor} borderColor={borderColor} overflow="hidden">
+      <Card variant="outline" bg={bgColor} border="1px solid" borderColor="#304945" overflow="hidden">
         <Box px={6} py={4}>
           <PageHeader
             title="Analytics Dashboard"
@@ -163,7 +163,7 @@ function Analytics() {
 
           <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={8}>
             {/* User Activity Chart */}
-            <Card bg={bgColor} borderColor={borderColor}>
+            <Card bg={bgColor} border="1px solid" borderColor="#304945">
               <CardBody>
                 <Heading size="md" mb={4}>User Activity</Heading>
                 <Box h="300px">
@@ -184,7 +184,7 @@ function Analytics() {
             </Card>
 
             {/* Role Distribution Chart */}
-            <Card bg={bgColor} borderColor={borderColor}>
+            <Card bg={bgColor} border="1px solid" borderColor="#304945">
               <CardBody>
                 <Heading size="md" mb={4}>Role Distribution</Heading>
                 <Box h="300px">
@@ -213,7 +213,7 @@ function Analytics() {
             </Card>
 
             {/* Permission Usage Chart */}
-            <Card bg={bgColor} borderColor={borderColor}>
+            <Card bg={bgColor} border="1px solid" borderColor="#304945">
               <CardBody>
                 <Heading size="md" mb={4}>Permission Usage</Heading>
                 <Box h="300px">
@@ -231,7 +231,7 @@ function Analytics() {
             </Card>
 
             {/* Login Trends Chart */}
-            <Card bg={bgColor} borderColor={borderColor}>
+            <Card bg={bgColor} border="1px solid" borderColor="#304945">
               <CardBody>
                 <Heading size="md" mb={4}>Login Trends</Heading>
                 <Box h="300px">

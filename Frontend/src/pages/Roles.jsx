@@ -179,7 +179,8 @@ function Roles() {
     <Card
       key={role.id}
       bg={bgColor}
-      borderColor={borderColor}
+      border="1px solid"
+      borderColor="#304945"
       mb={4}
       overflow="hidden"
     >
@@ -268,7 +269,7 @@ function Roles() {
 
   return (
     <Box p={8}>
-      <Card variant="outline" bg={bgColor} borderColor={borderColor} overflow="hidden">
+      <Card variant="outline" bg={bgColor} border="1px solid" borderColor="#304945" overflow="hidden">
         <Box px={6} py={4}>
           <PageHeader
             title="Roles"
@@ -357,31 +358,42 @@ function Roles() {
                           </Td>
                           <Td borderColor={borderColor}>
                             <HStack spacing={2}>
-                              <IconButton
-                                icon={<KeyIcon className="h-4 w-4" />}
-                                variant="ghost"
-                                colorScheme="vrv"
-                                size="sm"
-                                onClick={() => handlePermissionsClick(role)}
-                                aria-label="Edit permissions"
-                              />
-                              <IconButton
-                                icon={<PencilSquareIcon className="h-4 w-4" />}
-                                variant="ghost"
-                                colorScheme="vrv"
-                                size="sm"
-                                onClick={() => handleEditRole(role)}
-                                aria-label="Edit role"
-                              />
-                              <IconButton
-                                icon={<TrashIcon className="h-4 w-4" />}
-                                variant="ghost"
-                                colorScheme="red"
-                                size="sm"
-                                onClick={() => handleDeleteClick(role)}
-                                aria-label="Delete role"
-                                isDisabled={role.name === 'Admin'}
-                              />
+                              <Tooltip label="Edit role permissions" hasArrow>
+                                <IconButton
+                                  icon={<KeyIcon className="h-4 w-4" />}
+                                  variant="ghost"
+                                  colorScheme="vrv"
+                                  size="sm"
+                                  onClick={() => handlePermissionsClick(role)}
+                                  aria-label="Edit permissions"
+                                />
+                              </Tooltip>
+
+                              <Tooltip label="Edit role details" hasArrow>
+                                <IconButton
+                                  icon={<PencilSquareIcon className="h-4 w-4" />}
+                                  variant="ghost"
+                                  colorScheme="vrv"
+                                  size="sm"
+                                  onClick={() => handleEditRole(role)}
+                                  aria-label="Edit role"
+                                />
+                              </Tooltip>
+
+                              <Tooltip 
+                                label={role.name === 'Admin' ? "Admin role cannot be deleted" : "Delete role"} 
+                                hasArrow
+                              >
+                                <IconButton
+                                  icon={<TrashIcon className="h-4 w-4" />}
+                                  variant="ghost"
+                                  colorScheme="red"
+                                  size="sm"
+                                  onClick={() => handleDeleteClick(role)}
+                                  aria-label="Delete role"
+                                  isDisabled={role.name === 'Admin'}
+                                />
+                              </Tooltip>
                             </HStack>
                           </Td>
                         </Tr>

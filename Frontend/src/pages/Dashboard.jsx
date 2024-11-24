@@ -12,6 +12,7 @@ import {
   Avatar,
   AvatarGroup,
   Badge,
+  Tooltip,
 } from '@chakra-ui/react'
 import {
   UsersIcon,
@@ -23,7 +24,7 @@ import {
   ArrowUpIcon,
   ArrowDownIcon,
 } from '@heroicons/react/24/outline'
-import { LineChart, Line, ResponsiveContainer, Tooltip } from 'recharts'
+import { LineChart, Line, ResponsiveContainer } from 'recharts'
 import PageHeader from '../components/layout/PageHeader'
 import PropTypes from 'prop-types'
 
@@ -85,7 +86,7 @@ function StatCard({ title, stat, icon, trend, helpText, color }) {
   const iconColor = useColorModeValue(`${color}.500`, `${color}.200`)
 
   return (
-    <Card bg={bgColor}>
+    <Card bg={bgColor} border="1px solid" borderColor="#304945">
       <CardBody>
         <Stack spacing={4}>
           <HStack spacing={4}>
@@ -125,10 +126,9 @@ StatCard.propTypes = {
 
 function ActivityFeed() {
   const bgColor = useColorModeValue('white', 'gray.800')
-  const borderColor = useColorModeValue('gray.200', 'gray.700')
 
   return (
-    <Card bg={bgColor}>
+    <Card bg={bgColor} border="1px solid" borderColor="#304945">
       <CardBody>
         <Text fontSize="lg" fontWeight="medium" mb={4}>Recent Activity</Text>
         <Stack spacing={4}>
@@ -155,7 +155,7 @@ function EventsCard() {
   const bgColor = useColorModeValue('white', 'gray.800')
 
   return (
-    <Card bg={bgColor}>
+    <Card bg={bgColor} border="1px solid" borderColor="#304945">
       <CardBody>
         <Text fontSize="lg" fontWeight="medium" mb={4}>Today&apos;s Events</Text>
         <Stack spacing={4}>
@@ -193,42 +193,61 @@ function Dashboard() {
       />
 
       <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={6} mb={6}>
-        <StatCard
-          title="Total Users"
-          stat="125"
-          icon={UsersIcon}
-          trend={12}
-          helpText="vs last month"
-          color="blue"
-        />
-        <StatCard
-          title="Active Roles"
-          stat="8"
-          icon={KeyIcon}
-          trend={-5}
-          helpText="vs last month"
-          color="purple"
-        />
-        <StatCard
-          title="Departments"
-          stat="12"
-          icon={ChartBarIcon}
-          trend={8}
-          helpText="vs last month"
-          color="green"
-        />
-        <StatCard
-          title="Events"
-          stat="28"
-          icon={CalendarIcon}
-          trend={15}
-          helpText="vs last month"
-          color="orange"
-        />
+        <Tooltip label="Total number of system users" hasArrow>
+          <Box>
+            <StatCard
+              title="Total Users"
+              stat="125"
+              icon={UsersIcon}
+              trend={12}
+              helpText="vs last month"
+              color="blue"
+            />
+          </Box>
+        </Tooltip>
+        
+        <Tooltip label="Active roles in the system" hasArrow>
+          <Box>
+            <StatCard
+              title="Active Roles"
+              stat="8"
+              icon={KeyIcon}
+              trend={-5}
+              helpText="vs last month"
+              color="purple"
+            />
+          </Box>
+        </Tooltip>
+        
+        <Tooltip label="Total departments" hasArrow>
+          <Box>
+            <StatCard
+              title="Departments"
+              stat="12"
+              icon={ChartBarIcon}
+              trend={8}
+              helpText="vs last month"
+              color="green"
+            />
+          </Box>
+        </Tooltip>
+        
+        <Tooltip label="Scheduled events" hasArrow>
+          <Box>
+            <StatCard
+              title="Events"
+              stat="28"
+              icon={CalendarIcon}
+              trend={15}
+              helpText="vs last month"
+              color="orange"
+            />
+          </Box>
+        </Tooltip>
       </SimpleGrid>
 
       <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={6} mb={6}>
-        <Card bg={bgColor}>
+        <Card bg={bgColor} border="1px solid" borderColor="#304945">
           <CardBody>
             <HStack justify="space-between" mb={4}>
               <Box>
@@ -259,7 +278,7 @@ function Dashboard() {
           </CardBody>
         </Card>
 
-        <Card bg={bgColor}>
+        <Card bg={bgColor} border="1px solid" borderColor="#304945">
           <CardBody>
             <Text fontSize="lg" fontWeight="medium" mb={4}>Department Overview</Text>
             <Stack spacing={4}>

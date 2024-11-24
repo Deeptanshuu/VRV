@@ -11,7 +11,7 @@ import {
 
 function Modal({ isOpen, onClose, title, children }) {
   const bgColor = useColorModeValue('white', 'gray.800')
-  const borderColor = useColorModeValue('gray.200', 'gray.700')
+  const borderColor = useColorModeValue('gray.700', 'gray.700')
 
   return (
     <ChakraModal 

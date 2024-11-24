@@ -38,7 +38,7 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd Frontend
+  cd VRV/Frontend
 ```
 
 Install dependencies

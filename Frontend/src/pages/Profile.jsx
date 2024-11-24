@@ -93,7 +93,7 @@ function Profile() {
 
       <SimpleGrid columns={{ base: 1, lg: 3 }} spacing={6}>
         {/* Profile Overview */}
-        <Card bg={bgColor} borderColor={borderColor}>
+        <Card bg={bgColor} border="1px solid" borderColor="#304945">
           <CardBody>
             <VStack spacing={6} align="center">
               <Avatar
@@ -123,7 +123,7 @@ function Profile() {
         </Card>
 
         {/* Personal Information */}
-        <Card bg={bgColor} borderColor={borderColor}>
+        <Card bg={bgColor} border="1px solid" borderColor="#304945">
           <CardBody>
             <Text fontSize="lg" fontWeight="medium" mb={6}>Personal Information</Text>
             <Stack spacing={6}>
@@ -152,7 +152,7 @@ function Profile() {
         </Card>
 
         {/* Work Information */}
-        <Card bg={bgColor} borderColor={borderColor}>
+        <Card bg={bgColor} border="1px solid" borderColor="#304945">
           <CardBody>
             <Text fontSize="lg" fontWeight="medium" mb={6}>Work Information</Text>
             <Stack spacing={6}>

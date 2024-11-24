@@ -14,6 +14,14 @@ import {
   useColorModeValue,
   Tooltip,
   Divider,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverArrow,
+  Stack,
+  Circle,
 } from '@chakra-ui/react'
 import { BellIcon, MoonIcon, SunIcon, UserIcon, Cog6ToothIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
 import { useNavigate, Link } from 'react-router-dom'
@@ -22,16 +30,16 @@ import { authService } from '../../services/authService'
 function Header() {
   const navigate = useNavigate()
   const user = authService.getCurrentUser()
-  const [notifications] = useState([])
   const { colorMode, toggleColorMode } = useColorMode()
   
-  // Updated color mode values
+  // Add these color mode values
   const bgColor = useColorModeValue('#304945', '#243634')
   const borderColor = useColorModeValue('#3d5b56', '#243634')
   const activeItemBg = useColorModeValue('#405d58', '#3d5b56')
   const hoverBg = useColorModeValue('#405d58', '#3d5b56')
+  const notificationBg = useColorModeValue('white', 'gray.800')
   
-  // Menu specific colors
+  // Add these menu-specific colors
   const menuBg = useColorModeValue('white', 'gray.800')
   const menuBorderColor = useColorModeValue('gray.200', 'gray.700')
   const menuItemBg = useColorModeValue('white', 'gray.800')
@@ -40,9 +48,64 @@ function Header() {
   const iconBg = useColorModeValue('vrv.50', 'whiteAlpha.100')
   const iconColor = useColorModeValue('vrv.500', 'whiteAlpha.900')
 
+  // Add handleLogout function
   const handleLogout = () => {
     authService.logout()
     navigate('/login')
+  }
+
+  // Mock notifications data
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      title: 'New User Added',
+      description: 'John Doe has been added to the system',
+      time: '2 min ago',
+      isRead: false,
+      type: 'user'
+    },
+    {
+      id: 2,
+      title: 'Role Updated',
+      description: 'Manager role permissions have been modified',
+      time: '1 hour ago',
+      isRead: false,
+      type: 'role'
+    },
+    {
+      id: 3,
+      title: 'System Update',
+      description: 'System maintenance scheduled for tomorrow',
+      time: '2 hours ago',
+      isRead: true,
+      type: 'system'
+    }
+  ])
+
+  // Get unread notifications count
+  const unreadCount = notifications.filter(n => !n.isRead).length
+
+  // Mark notification as read
+  const handleNotificationClick = (notificationId) => {
+    setNotifications(prev => 
+      prev.map(notification => 
+        notification.id === notificationId 
+          ? { ...notification, isRead: true }
+          : notification
+      )
+    )
+  }
+
+  // Mark all notifications as read
+  const markAllAsRead = () => {
+    setNotifications(prev =>
+      prev.map(notification => ({ ...notification, isRead: true }))
+    )
+  }
+
+  // Clear all notifications
+  const clearNotifications = () => {
+    setNotifications([])
   }
 
   return (
@@ -75,25 +138,101 @@ function Header() {
           </Tooltip>
 
           <Box position="relative">
-            <IconButton
-              size={{ base: 'sm', md: 'md' }}
-              variant="ghost"
-              icon={<BellIcon className="h-5 w-5 md:h-6 md:w-6" />}
-              aria-label="Notifications"
-              color="white"
-              _hover={{ bg: hoverBg }}
-            />
-            {notifications.length > 0 && (
-              <Badge
-                position="absolute"
-                top={1}
-                right={1}
-                colorScheme="red"
-                variant="solid"
-                borderRadius="full"
-                boxSize={2}
-              />
-            )}
+            <Popover>
+              <PopoverTrigger>
+                <Box position="relative">
+                  <IconButton
+                    size={{ base: 'sm', md: 'md' }}
+                    variant="ghost"
+                    icon={<BellIcon className="h-5 w-5 md:h-6 md:w-6" />}
+                    aria-label="Notifications"
+                    color="white"
+                    _hover={{ bg: hoverBg }}
+                  />
+                  {unreadCount > 0 && (
+                    <Circle
+                      size="5"
+                      bg="red.500"
+                      color="white"
+                      position="absolute"
+                      top={0}
+                      right={0}
+                      transform="translate(25%, -25%)"
+                      fontSize="xs"
+                      fontWeight="bold"
+                    >
+                      {unreadCount}
+                    </Circle>
+                  )}
+                </Box>
+              </PopoverTrigger>
+              <PopoverContent
+                w="350px"
+                bg={notificationBg}
+                border="1px solid"
+                borderColor="#304945"
+                _focus={{ boxShadow: 'none' }}
+              >
+                <PopoverArrow />
+                <PopoverHeader borderBottomWidth="1px" py={4}>
+                  <Flex justify="space-between" align="center">
+                    <Text fontWeight="medium">Notifications</Text>
+                    <HStack spacing={2}>
+                      <Text
+                        fontSize="sm"
+                        color="vrv.500"
+                        cursor="pointer"
+                        onClick={markAllAsRead}
+                        _hover={{ textDecoration: 'underline' }}
+                      >
+                        Mark all as read
+                      </Text>
+                      <Text
+                        fontSize="sm"
+                        color="red.500"
+                        cursor="pointer"
+                        onClick={clearNotifications}
+                        _hover={{ textDecoration: 'underline' }}
+                      >
+                        Clear all
+                      </Text>
+                    </HStack>
+                  </Flex>
+                </PopoverHeader>
+                <PopoverBody p={0}>
+                  <Stack spacing={0} maxH="400px" overflowY="auto">
+                    {notifications.length === 0 ? (
+                      <Box p={4} textAlign="center">
+                        <Text color="gray.500">No notifications</Text>
+                      </Box>
+                    ) : (
+                      notifications.map((notification) => (
+                        <Box
+                          key={notification.id}
+                          p={4}
+                          bg={notification.isRead ? 'transparent' : 'vrv.50'}
+                          _hover={{ bg: useColorModeValue('gray.50', 'gray.700') }}
+                          cursor="pointer"
+                          onClick={() => handleNotificationClick(notification.id)}
+                          borderBottomWidth="1px"
+                          borderColor="inherit"
+                        >
+                          <Text fontWeight="medium" fontSize="sm">
+                            {notification.title}
+                          </Text>
+                          <Text fontSize="sm" color="gray.500" mt={1}>
+                            {notification.description}
+                          </Text>
+                          <Text fontSize="xs" color="gray.400" mt={1}>
+                            {notification.time}
+                          </Text>
+                        </Box>
+                      ))
+                    )}
+                  </Stack>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
           </Box>
 
           <Box w="1px" h="8" bg={borderColor} opacity="0.3" display={{ base: 'none', md: 'block' }} />

@@ -193,7 +193,8 @@ function Departments() {
     <Card
       key={department.id}
       bg={bgColor}
-      borderColor={borderColor}
+      border="1px solid"
+      borderColor="#304945"
       mb={4}
       overflow="hidden"
     >
@@ -294,7 +295,7 @@ function Departments() {
 
   return (
     <Box p={8}>
-      <Card variant="outline" bg={bgColor} borderColor={borderColor} overflow="hidden">
+      <Card variant="outline" bg={bgColor} border="1px solid" borderColor="#304945" overflow="hidden">
         <Box px={6} py={4}>
           <PageHeader
             title="Departments"

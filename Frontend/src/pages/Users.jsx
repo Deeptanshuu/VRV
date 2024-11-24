@@ -28,6 +28,7 @@ import {
   Divider,
   useBreakpointValue,
   Spinner,
+  Tooltip,
 } from '@chakra-ui/react'
 import { 
   PlusIcon, 
@@ -206,7 +207,8 @@ function Users() {
     <Card
       key={user.id}
       bg={bgColor}
-      borderColor={borderColor}
+      border="1px solid"
+      borderColor="#304945"
       mb={4}
       overflow="hidden"
     >
@@ -299,7 +301,7 @@ function Users() {
 
   return (
     <Box p={8}>
-      <Card variant="outline" bg={bgColor} borderColor={borderColor} overflow="hidden">
+      <Card variant="outline" bg={bgColor} border="1px solid" borderColor="#304945" overflow="hidden">
         <Box px={6} py={4}>
           <PageHeader
             title="Users"
@@ -314,16 +316,18 @@ function Users() {
             spacing={4} 
             mb={6}
           >
-            <InputGroup maxW={{ base: 'full', md: '300px' }}>
-              <InputLeftElement pointerEvents="none">
-                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
-              </InputLeftElement>
-              <Input
-                placeholder="Search users..."
-                value={filters.search}
-                onChange={(e) => handleFilterChange('search', e.target.value)}
-              />
-            </InputGroup>
+            <Tooltip label="Search by name, email, or ID" hasArrow>
+              <InputGroup maxW={{ base: 'full', md: '300px' }}>
+                <InputLeftElement pointerEvents="none">
+                  <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+                </InputLeftElement>
+                <Input
+                  placeholder="Search users..."
+                  value={filters.search}
+                  onChange={(e) => handleFilterChange('search', e.target.value)}
+                />
+              </InputGroup>
+            </Tooltip>
 
             <Select
               placeholder="All Roles"
@@ -475,22 +479,27 @@ function Users() {
                         </Td>
                         <Td borderColor={borderColor}>
                           <HStack spacing={2}>
-                            <IconButton
-                              icon={<PencilSquareIcon className="h-4 w-4" />}
-                              variant="ghost"
-                              colorScheme="vrv"
-                              size="sm"
-                              onClick={() => handleEditUser(user)}
-                              aria-label="Edit user"
-                            />
-                            <IconButton
-                              icon={<TrashIcon className="h-4 w-4" />}
-                              variant="ghost"
-                              colorScheme="red"
-                              size="sm"
-                              onClick={() => handleDeleteClick(user)}
-                              aria-label="Delete user"
-                            />
+                            <Tooltip label="Edit user details" hasArrow>
+                              <IconButton
+                                icon={<PencilSquareIcon className="h-4 w-4" />}
+                                variant="ghost"
+                                colorScheme="vrv"
+                                size="sm"
+                                onClick={() => handleEditUser(user)}
+                                aria-label="Edit user"
+                              />
+                            </Tooltip>
+                            
+                            <Tooltip label="Delete user" hasArrow>
+                              <IconButton
+                                icon={<TrashIcon className="h-4 w-4" />}
+                                variant="ghost"
+                                colorScheme="red"
+                                size="sm"
+                                onClick={() => handleDeleteClick(user)}
+                                aria-label="Delete user"
+                              />
+                            </Tooltip>
                           </HStack>
                         </Td>
                       </Tr>
