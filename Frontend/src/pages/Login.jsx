@@ -28,10 +28,12 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { authService } from '../services/authService'
 import { InformationCircleIcon, XMarkIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+import { MoonIcon, SunIcon } from '@chakra-ui/icons'
+import { useColorMode } from '@chakra-ui/react'
 
 function Login() {
   const bgColor = useColorModeValue('white', 'gray.800')
-  const borderColor = useColorModeValue('gray.200', 'gray.700')
+  const borderColor = useColorModeValue('#293836', '#293836')
   const textColor = useColorModeValue('gray.600', 'gray.400')
   const demoButtonBg = useColorModeValue('vrv.50', 'rgba(48, 73, 69, 0.2)')
   const demoButtonColor = useColorModeValue('vrv.600', 'vrv.200')
@@ -46,7 +48,8 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
   const toast = useToast()
-  const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: false })
+  const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true })
+  const { colorMode, toggleColorMode } = useColorMode()
 
   const demoCredentials = [
     { role: 'Admin', email: 'admin@vrv.com', password: 'admin123' },
@@ -80,26 +83,64 @@ function Login() {
     }
   }
 
+  const rightSideGradient = `
+    radial-gradient(49% 81% at 45% 47%, rgba(26, 42, 40, 0.37) 0%, rgba(16, 24, 23, 0) 100%),
+    radial-gradient(113% 91% at 17% -2%, rgba(44, 82, 75, 1) 1%, rgba(16, 24, 23, 0) 99%),
+    radial-gradient(142% 91% at 83% 7%, rgba(39, 63, 59, 0.8) 1%, rgba(16, 24, 23, 0) 99%),
+    radial-gradient(142% 91% at -6% 74%, rgba(28, 48, 44, 1) 1%, rgba(16, 24, 23, 0) 99%),
+    radial-gradient(142% 91% at 111% 84%, rgba(44, 82, 75, 0.8) 0%, rgba(16, 24, 23, 1) 100%)
+  `
+
   return (
     <Box
-      minH="100vh"
+      h="100vh"
+      w="100vw"
       display="flex"
-      position="relative"
-      background="radial-gradient(circle at top, rgba(48, 73, 69, 0.98) 0%, rgba(24, 36, 35, 0.95) 100%)"
       overflow="hidden"
+      position="relative"
     >
+      <IconButton
+        aria-label="Toggle dark mode"
+        icon={colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}
+        onClick={toggleColorMode}
+        position="absolute"
+        top={4}
+        right={4}
+        zIndex={2}
+        size="lg"
+        borderRadius="full"
+        bg={useColorModeValue('white', 'gray.800')}
+        color={useColorModeValue('gray.800', 'yellow.400')}
+        boxShadow="lg"
+        _hover={{
+          bg: useColorModeValue('gray.100', 'gray.700'),
+          transform: 'scale(1.05)'
+        }}
+        _active={{
+          bg: useColorModeValue('gray.200', 'gray.600'),
+          transform: 'scale(0.95)'
+        }}
+        transition="all 0.2s"
+      />
+
+      {/* Left Side - Now with solid color */}
       <Box
         display={{ base: 'none', lg: 'flex' }}
         w="50%"
+        h="100%"
+        bg={useColorModeValue('#ffffff', '#1a2a28')}
+        position="relative"
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
         p={10}
-        color="white"
+        color={useColorModeValue('#1a2a28', 'white')}
       >
         <Box
           maxW="480px"
           textAlign="center"
+          position="relative"
+          zIndex={2}
         >
           <img 
             src="/vite.svg" 
@@ -107,49 +148,93 @@ function Login() {
             style={{ 
               width: '120px',
               height: '120px',
-              margin: '0 auto 2rem'
+              margin: '0 auto 2rem',
+              filter: 'drop-shadow(0 0 20px rgba(44, 82, 75, 0.2))'
             }} 
           />
           <Heading 
             size="2xl" 
             mb={6}
-            bgColor="white"
-            bgClip="text"
+            color={useColorModeValue('#1a2a28', 'white')}
           >
             Welcome to VRV Security
           </Heading>
-          <Divider />
-          <Text fontSize="xl" color="gray.300" mt={8} mb={8}>
+          <Divider opacity={0.2} />
+          <Text 
+            fontSize="xl" 
+            color={useColorModeValue('gray.700', 'gray.100')} 
+            mt={8} 
+            mb={8}
+          >
             Hi, I am Deeptanshu Lal, developer from Mumbai, India. This is my demo project for VRV Security.
-            Github: <Link onClick={() => window.open('https://github.com/Deeptanshuu/VRV', '_blank')}>Project Link</Link>
+            Github: <Link 
+              onClick={() => window.open('https://github.com/Deeptanshuu/VRV', '_blank')}
+              color={useColorModeValue('#2c524b', '#6394a4')}
+              _hover={{ color: useColorModeValue('#1a2a28', 'white') }}
+            >
+              Project Link
+            </Link>
           </Text>
         </Box>
       </Box>
 
+      {/* Right Side - Now with gradient */}
       <Box
         w={{ base: '100%', lg: '50%' }}
+        h="100%"
+        position="relative"
         display="flex"
         alignItems="center"
         justifyContent="center"
         p={4}
+        sx={{
+          backgroundSize: '100% 100%',
+          backgroundPosition: '0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px',
+          backgroundImage: rightSideGradient,
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: useColorModeValue(  'linear-gradient(to top, #559269, #4f8b67, #4a8465, #457d63, #417660, #3e705d, #3b6a5a, #386457, #365d53, #33564f, #32504a, #304945)', 'gray.900'),
+            backdropFilter: 'blur(100px)',
+            zIndex: 0
+          }
+        }}
       >
         <Card
-          bg={bgColor}
-          maxW="md"
-          w="full"
+          bg={useColorModeValue('white', 'rgba(26, 42, 40, 0.7)')}
+          w={{ base: 'full', md: '600px' }}
+          maxW="100%"
           position="relative"
           boxShadow="xl"
           borderRadius="xl"
-          borderColor={borderColor}
-          pb={8}
+          border="1px solid"
+          borderColor={useColorModeValue('rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.1)')}
+          p={{ base: 4, md: 8 }}
+          backdropFilter="blur(10px)"
+          zIndex={1}
         >
-          <CardBody p={8}>
+          <CardBody>
             <Stack spacing={6}>
               <Box textAlign="center">
-                <Heading 
+                <Box display={{ base: 'block', lg: 'none' }}>
+                  <img 
+                    src="/vite.svg" 
+                    alt="VRV Logo" 
+                    style={{
+                      width: '100px',
+                      height: '100px',
+                      margin: '0 auto 0.5rem'
+                    }}
+                  />
+                </Box>
+              <Heading 
                   size="xl" 
                   mb={2}
-                  bgGradient="linear(to-r, vrv.400, vrv.600)"
+                  bgGradient={useColorModeValue('linear(to-r, vrv.400, vrv.600)', 'linear(to-t, vrv.100, vrv.200)')}
                   bgClip="text"
                 >
                   Welcome Back
@@ -167,6 +252,8 @@ function Login() {
                   bg={alertBg}
                   color={alertColor}
                   backdropFilter="blur(8px)"
+                  border="1px solid"
+                  borderColor={borderColor}
                 >
                   <AlertIcon color={alertIconColor} />
                   <Box flex="1">

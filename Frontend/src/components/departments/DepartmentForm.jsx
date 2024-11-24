@@ -157,7 +157,7 @@ function DepartmentForm({ department, onSubmit, onCancel }) {
         </FormControl>
 
         <FormControl isInvalid={!!errors.headId} isRequired>
-          <FormLabel>Department Head</FormLabel>
+          <FormLabel>Department Head <br /> (Only Active Managers)</FormLabel>
           <Select
             name="headId"
             value={formData.headId}
