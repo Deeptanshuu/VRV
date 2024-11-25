@@ -17,7 +17,7 @@ export default defineConfig({
             '@fullcalendar/timegrid',
             '@fullcalendar/interaction'
           ],
-          'icons': ['@chakra-ui/icons'],
+          'icons': ['@chakra-ui/icons', '@heroicons/react'],
         },
       },
     },
@@ -39,5 +39,8 @@ export default defineConfig({
       '@chakra-ui/react',
       'recharts'
     ],
+  },
+  server: {
+    https: false
   }
 })
