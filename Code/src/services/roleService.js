@@ -1,3 +1,5 @@
+import { userService } from './userService'
+
 const MOCK_ROLES = [
   {
     id: 1,
@@ -15,7 +17,7 @@ const MOCK_ROLES = [
   },
   {
     id: 3,
-    name: 'User',
+    name: 'Employee',
     description: 'Basic access',
     permissions: ['reports.view'],
     status: 'Active'
@@ -25,7 +27,16 @@ const MOCK_ROLES = [
 class RoleService {
   async getRoles() {
     try {
-      return Promise.resolve(MOCK_ROLES)
+      // Get all users to calculate role counts
+      const users = await userService.getUsers()
+      
+      // Calculate user count for each role
+      const rolesWithCounts = MOCK_ROLES.map(role => ({
+        ...role,
+        userCount: users.filter(user => user.role === role.name).length
+      }))
+
+      return Promise.resolve(rolesWithCounts)
     } catch (error) {
       this.handleError(error)
     }

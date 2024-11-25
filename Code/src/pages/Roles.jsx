@@ -10,7 +10,6 @@ import {
   Td,
   IconButton,
   Badge,
-  Heading,
   HStack,
   useDisclosure,
   Flex,
@@ -27,6 +26,10 @@ import {
   Spinner,
   Wrap,
   WrapItem,
+  InputGroup,
+  InputLeftElement,
+  Input,
+  Select,
 } from '@chakra-ui/react'
 import { 
   PlusIcon, 
@@ -34,6 +37,7 @@ import {
   TrashIcon,
   KeyIcon,
   ShieldCheckIcon,
+  MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline'
 import { roleService } from '../services/roleService'
 import Modal from '../components/common/Modal'
@@ -55,6 +59,12 @@ function Roles() {
   const headerBg = useColorModeValue('gray.50', 'gray.700')
   const borderColor = useColorModeValue('gray.200', 'gray.600')
   const displayMode = useBreakpointValue({ base: 'mobile', md: 'desktop' })
+
+  // Add new state for filters
+  const [filters, setFilters] = useState({
+    search: '',
+    status: '',
+  })
 
   useEffect(() => {
     loadRoles()
@@ -175,6 +185,28 @@ function Roles() {
     }
   }
 
+  // Add function to handle filter changes
+  const handleFilterChange = (field, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+  // Filter roles based on search and status
+  const filteredRoles = roles.filter(role => {
+    const matchesSearch = 
+      filters.search === '' ||
+      role.name.toLowerCase().includes(filters.search.toLowerCase()) ||
+      role.description.toLowerCase().includes(filters.search.toLowerCase())
+
+    const matchesStatus = 
+      filters.status === '' || 
+      role.status === filters.status
+
+    return matchesSearch && matchesStatus
+  })
+
   const renderMobileCard = (role) => (
     <Card
       key={role.id}
@@ -279,6 +311,38 @@ function Roles() {
             onButtonClick={handleAddRole}
           />
 
+          {/* Add Filters */}
+          <Stack 
+            direction={{ base: 'column', md: 'row' }} 
+            spacing={4} 
+            mb={6}
+          >
+            <InputGroup maxW={{ base: 'full', md: '300px' }}>
+              <InputLeftElement pointerEvents="none">
+                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+              </InputLeftElement>
+              <Input
+                placeholder="Search roles..."
+                value={filters.search}
+                onChange={(e) => handleFilterChange('search', e.target.value)}
+              />
+            </InputGroup>
+
+            <Select
+              placeholder="All Statuses"
+              value={filters.status}
+              onChange={(e) => handleFilterChange('status', e.target.value)}
+              maxW={{ base: 'full', md: '200px' }}
+            >
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </Select>
+          </Stack>
+
+          <Text color={textColor} fontSize="sm" mb={4}>
+            Showing {filteredRoles.length} of {roles.length} roles
+          </Text>
+
           <Box>
             {displayMode === 'desktop' ? (
               <Box overflowX="auto">
@@ -288,18 +352,27 @@ function Roles() {
                       <Th borderColor={borderColor}>Role</Th>
                       <Th borderColor={borderColor}>Description</Th>
                       <Th borderColor={borderColor}>Permissions</Th>
+                      <Th borderColor={borderColor}>Status</Th>
+                      <Th borderColor={borderColor}>Users</Th>
                       <Th borderColor={borderColor}>Actions</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
                     {isLoading ? (
                       <Tr>
-                        <Td colSpan={4} textAlign="center" py={8} borderColor={borderColor}>
-                          Loading...
+                        <Td colSpan={6} textAlign="center" py={8} borderColor={borderColor}>
+                          <Spinner size="sm" mr={2} />
+                          <Text display="inline-block">Loading...</Text>
+                        </Td>
+                      </Tr>
+                    ) : filteredRoles.length === 0 ? (
+                      <Tr>
+                        <Td colSpan={6} textAlign="center" py={8} borderColor={borderColor}>
+                          No roles found matching the filters
                         </Td>
                       </Tr>
                     ) : (
-                      roles.map((role) => (
+                      filteredRoles.map((role) => (
                         <Tr key={role.id}>
                           <Td borderColor={borderColor}>
                             <HStack spacing={3}>
@@ -355,6 +428,19 @@ function Roles() {
                                 </Tooltip>
                               )}
                             </HStack>
+                          </Td>
+                          <Td borderColor={borderColor}>
+                            <Badge
+                              colorScheme={role.status === 'Active' ? 'green' : 'red'}
+                              rounded="full"
+                              px={2}
+                              py={1}
+                            >
+                              {role.status}
+                            </Badge>
+                          </Td>
+                          <Td borderColor={borderColor}>
+                            <Text>{role.userCount || 0} users</Text>
                           </Td>
                           <Td borderColor={borderColor}>
                             <HStack spacing={2}>
