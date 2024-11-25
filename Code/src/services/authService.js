@@ -25,26 +25,24 @@ const MOCK_USERS = [
 class AuthService {
   async login(email, password) {
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const user = MOCK_USERS.find(
-          u => u.email === email && u.password === password
-        )
-        
-        if (user) {
-          const userWithoutPassword = {
-            ...user,
-            password: undefined
-          }
-          const token = `mock-jwt-token-${user.role.toLowerCase()}`
-          
-          localStorage.setItem('user', JSON.stringify(userWithoutPassword))
-          localStorage.setItem('token', token)
-          
-          resolve(userWithoutPassword)
-        } else {
-          reject(new Error('Invalid email or password'))
+      const user = MOCK_USERS.find(
+        u => u.email === email && u.password === password
+      )
+      
+      if (user) {
+        const userWithoutPassword = {
+          ...user,
+          password: undefined
         }
-      }, 800)
+        const token = `mock-jwt-token-${user.role.toLowerCase()}`
+        
+        localStorage.setItem('user', JSON.stringify(userWithoutPassword))
+        localStorage.setItem('token', token)
+        
+        resolve(userWithoutPassword)
+      } else {
+        reject(new Error('Invalid email or password'))
+      }
     })
   }
 
