@@ -35,6 +35,13 @@ A comprehensive Role-Based Access Control (RBAC) system built with Node.js, Expr
 - **Password Security**: bcrypt
 - **Testing**: Jest + Supertest
 
+##Screenshots 
+![image](https://github.com/user-attachments/assets/f3e509ce-6cc8-4d12-b3e6-3b8fcb321e5f)
+![image](https://github.com/user-attachments/assets/63fa55ee-8e97-423e-9184-56ff3a5feb45)
+![image](https://github.com/user-attachments/assets/704a4705-b270-4866-b1bb-086428999876)
+![image](https://github.com/user-attachments/assets/4b83dd14-14de-43c1-904e-9a30afc15aa0)
+
+
 ## Project Structure
 
 ```
