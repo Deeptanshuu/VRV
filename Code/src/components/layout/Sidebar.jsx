@@ -385,7 +385,7 @@ function Sidebar() {
             transition="transform 0.15s ease-out"
             w="100vw"
           >
-            <Box position="relative" w="100vw" h="100vh" >
+            <Box position="relative" w="100vw" h="full" >
               <DrawerCloseButton color="white" />
               <SidebarContent onClose={onClose}/>
             </Box>
