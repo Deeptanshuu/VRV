@@ -15,6 +15,7 @@ import {
   DrawerCloseButton,
   IconButton,
   useDisclosure,
+  Tooltip,
 } from '@chakra-ui/react'
 import { 
   HomeIcon, 
@@ -27,13 +28,17 @@ import {
   Bars3Icon,
   BuildingOfficeIcon,
   UserIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
 } from '@heroicons/react/24/outline'
 import { authService } from '../../services/authService'
+import { useState } from 'react'
 
 function Sidebar() {
   const navigate = useNavigate()
   const user = authService.getCurrentUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [isCollapsed, setIsCollapsed] = useState(false)
   const bgColor = useColorModeValue('#304945', '#243634')
   const borderColor = useColorModeValue('white', 'gray.700')
   const activeItemBg = useColorModeValue('#405d58', '#3d5b56')
@@ -114,36 +119,65 @@ function Sidebar() {
     <Box
       bg={bgColor}
       color="white"
-      borderRight="1px"
-      borderColor={borderColor}
       h="full"
       py="5"
+      position="relative"
+      transition="all 0.3s ease-in-out"
+      w={isCollapsed ? '20' : '64'}
     >
+      {/* Collapse Toggle Button */}
+      <IconButton
+        icon={isCollapsed ? <ChevronRightIcon className="h-5 w-5" /> : <ChevronLeftIcon className="h-5 w-5" />}
+        position="absolute"
+        right="-5"
+        top="50%"
+        transform="translateY(-50%)"
+        size="md"
+        rounded="full"
+        border="1px solid"
+        borderColor={bgColor}
+        display={{ base: 'none', md: 'flex' }}
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        aria-label={isCollapsed ? "Expand" : "Collapse"}
+        zIndex="10"
+        transition="all 0.2s ease-in-out"
+        _hover={{
+          transform: "translateY(-50%) scale(1.1)",
+          boxShadow: "lg"
+        }}
+      />
+
       <Flex direction="column" h="full">
         {/* Logo Section */}
-        <Flex align="center" px="6" mb="8">
+        <Flex align="center" px="6" mb="8" overflow="hidden" transition="all 0.3s ease-in-out">
           <Image 
             h="12" 
             w="auto" 
             src="/vite.svg" 
             alt="VRV Logo" 
             fallbackSrc="https://via.placeholder.com/36"
+            transition="transform 0.3s ease-in-out"
+            _hover={{ transform: "scale(1.05)" }}
           />
-          <Box ml="3">
-            <Text fontSize="lg" fontWeight="bold" letterSpacing="tight">
-              VRV Security
-            </Text>
-            <Text fontSize="xs" opacity="0.7">
-              Role Management System
-            </Text>
-          </Box>
+          {!isCollapsed && (
+            <Box ml="3">
+              <Text fontSize="lg" fontWeight="bold" letterSpacing="tight">
+                VRV Security
+              </Text>
+              <Text fontSize="xs" opacity="0.7">
+                Role Management System
+              </Text>
+            </Box>
+          )}
         </Flex>
 
         {/* Main Navigation */}
         <VStack spacing="2" align="stretch" flex="1">
-          <Text px="6" fontSize="xs" color={secondaryTextColor} textTransform="uppercase" letterSpacing="wider" mb="2">
-            Main Menu
-          </Text>
+          {!isCollapsed && (
+            <Text px="6" fontSize="xs" color={secondaryTextColor} textTransform="uppercase" letterSpacing="wider" mb="2">
+              Main Menu
+            </Text>
+          )}
           {mainNavigation.map((item) => (
             <NavItem 
               key={item.name} 
@@ -151,15 +185,18 @@ function Sidebar() {
               onClose={onDrawerClose}
               activeItemBg={activeItemBg}
               hoverBg={hoverBg}
+              isCollapsed={isCollapsed}
             />
           ))}
 
           {/* Secondary Navigation */}
           <Box mt="auto">
             <Divider my="4" borderColor={borderColor} opacity="0.3" />
-            <Text px="6" fontSize="xs" color={secondaryTextColor} textTransform="uppercase" letterSpacing="wider" mb="2">
-              System
-            </Text>
+            {!isCollapsed && (
+              <Text px="6" fontSize="xs" color={secondaryTextColor} textTransform="uppercase" letterSpacing="wider" mb="2">
+                System
+              </Text>
+            )}
             {secondaryNavigation.map((item) => (
               <NavItem 
                 key={item.name} 
@@ -168,6 +205,7 @@ function Sidebar() {
                 onClose={onDrawerClose}
                 activeItemBg={activeItemBg}
                 hoverBg={hoverBg}
+                isCollapsed={isCollapsed}
               />
             ))}
           </Box>
@@ -175,40 +213,68 @@ function Sidebar() {
 
         {/* User Section */}
         <Box px="4" mt="6">
-          <Flex
-            p="3"
-            rounded="xl"
-            bg={activeItemBg}
-            align="center"
-            cursor="pointer"
-            _hover={{ bg: hoverBg }}
-            transition="all 0.3s"
-          >
-            <Box
-              w="8"
-              h="8"
-              rounded="lg"
-              bg={hoverBg}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              fontSize="sm"
-              fontWeight="bold"
+          <Tooltip label={isCollapsed ? `${user?.name || 'Unknown User'}` : ''} placement="right">
+            <Flex
+              p="3"
+              rounded="xl"
+              bg={activeItemBg}
+              align="center"
+              cursor="pointer"
+              _hover={{ bg: hoverBg }}
+              transition="all 0.3s"
             >
-              {user?.name?.charAt(0) || 'Who dis?'}
-            </Box>
-            <Box ml="3" flex="1">
-              <Text fontSize="sm" fontWeight="medium">{user?.name || 'who dis?'}</Text>
-              <Text fontSize="xs" opacity="0.7">{user?.email || 'who dis?@who.dis'}</Text>
-            </Box>
-          </Flex>
+              <Box
+                w="8"
+                h="8"
+                rounded="lg"
+                bg={hoverBg}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                fontSize="sm"
+                fontWeight="bold"
+                transition="all 0.3s ease-in-out"
+                _hover={{ transform: "scale(1.05)" }}
+              >
+                {user?.name?.charAt(0) || '?'}
+              </Box>
+              {!isCollapsed && (
+                <Box ml="3" flex="1">
+                  <Text fontSize="sm" fontWeight="medium">{user?.name || 'Unknown'}</Text>
+                  <Text fontSize="xs" opacity="0.7">{user?.email || 'no@email.com'}</Text>
+                </Box>
+              )}
+            </Flex>
+          </Tooltip>
         </Box>
       </Flex>
     </Box>
   )
 
-  const NavItem = ({ item, isSecondary = false, onClose, activeItemBg, hoverBg }) => {
-    const isMobile = window.innerWidth < 768; // Check if we're on mobile
+  const NavItem = ({ item, isSecondary = false, onClose, activeItemBg, hoverBg, isCollapsed }) => {
+    const isMobile = window.innerWidth < 768;
+
+    const NavContent = (
+      <Tooltip label={isCollapsed ? item.name : ''} placement="right">
+        <Flex
+          align="center"
+          px="4"
+          py="3"
+          m={isCollapsed ? '3' : '0'}
+          rounded="xl"
+          transition="all 0.3s ease-in-out"
+          _hover={{ bg: hoverBg }}
+          opacity={isSecondary ? 0.8 : 1}
+        >
+          <Icon as={item.icon} boxSize="5" color="white" />
+          {!isCollapsed && (
+            <Text ml="3" fontSize="sm" fontWeight="medium" color="white">
+              {item.name}
+            </Text>
+          )}
+        </Flex>
+      </Tooltip>
+    );
 
     if (item.onClick) {
       return (
@@ -221,21 +287,7 @@ function Sidebar() {
           }}
           className="transition-all duration-200 ease-in-out"
         >
-          <Flex
-            align="center"
-            px="4"
-            py="3"
-            mx="2"
-            rounded="xl"
-            transition="all 0.3s"
-            _hover={{ bg: hoverBg }}
-            opacity={isSecondary ? 0.8 : 1}
-          >
-            <Icon as={item.icon} boxSize="5" color="white" />
-            <Text ml="3" fontSize="sm" fontWeight="medium" color="white">
-              {item.name}
-            </Text>
-          </Flex>
+          {NavContent}
         </Box>
       );
     }
@@ -252,21 +304,7 @@ function Sidebar() {
             onClose?.();
           }}
         >
-          <Flex
-            align="center"
-            px="4"
-            py="3"
-            mx="2"
-            rounded="xl"
-            transition="all 0.3s"
-            _hover={{ bg: hoverBg }}
-            opacity={isSecondary ? 0.8 : 1}
-          >
-            <Icon as={item.icon} boxSize="5" color="white" />
-            <Text ml="3" fontSize="sm" fontWeight="medium" color="white">
-              {item.name}
-            </Text>
-          </Flex>
+          {NavContent}
         </Box>
       );
     }
@@ -281,22 +319,23 @@ function Sidebar() {
         }}
       >
         {({ isActive }) => (
-          <Flex
-            align="center"
-            px="4"
-            py="3"
-            mx="2"
-            rounded="xl"
-            transition="all 0.3s"
+          <Box 
             bg={isActive ? activeItemBg : 'transparent'}
-            _hover={{ bg: hoverBg }}
-            opacity={isSecondary ? (isActive ? 1 : 0.8) : 1}
+            position="relative"
+            _before={isActive ? {
+              content: '""',
+              position: 'absolute',
+              left: '0',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: '4px',
+              height: '70%',
+              bg: 'white',
+              borderRadius: 'full',
+            } : {}}
           >
-            <Icon as={item.icon} boxSize="5" color="white" />
-            <Text ml="3" fontSize="sm" fontWeight="medium" color="white">
-              {item.name}
-            </Text>
-          </Flex>
+            {NavContent}
+          </Box>
         )}
       </NavLink>
     );
@@ -326,25 +365,32 @@ function Sidebar() {
       {/* Desktop sidebar */}
       <Box
         as="aside"
-        w="64"
+        transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+        w={isCollapsed ? '20' : '64'}
         display={{ base: 'none', md: 'block' }}
       >
         <SidebarContent />
       </Box>
 
       {/* Mobile drawer */}
-      <Drawer
-        isOpen={isOpen}
-        placement="left"
-        onClose={onClose}
-        size="full"
-      >
-        <DrawerOverlay zIndex={20} />
-        <DrawerContent zIndex={20}>
-          <DrawerCloseButton color="white" />
-          <SidebarContent onClose={onClose} />
-        </DrawerContent>
-      </Drawer>
+      <Box display={{ base: 'block', md: 'none' }}>
+        <Drawer
+          isOpen={isOpen}
+          placement="left"
+          onClose={onClose}
+        >
+          <DrawerOverlay />
+          <DrawerContent 
+            bg={bgColor}
+            transition="transform 0.3s ease-out"
+          >
+            <Box position="relative" h="full">
+              <DrawerCloseButton color="white" />
+              <SidebarContent onClose={onClose} />
+            </Box>
+          </DrawerContent>
+        </Drawer>
+      </Box>
     </>
   )
 }
