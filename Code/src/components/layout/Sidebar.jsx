@@ -172,7 +172,7 @@ function Sidebar() {
         </Flex>
 
         {/* Main Navigation */}
-        <VStack spacing="2" align="stretch" flex="1">
+        <VStack spacing="2" align='stretch' flex="1">
           {!isCollapsed && (
             <Text px="6" fontSize="xs" color={secondaryTextColor} textTransform="uppercase" letterSpacing="wider" mb="2">
               Main Menu
@@ -191,7 +191,7 @@ function Sidebar() {
 
           {/* Secondary Navigation */}
           <Box mt="auto">
-            <Divider my="4" borderColor={borderColor} opacity="0.3" />
+            <Divider my="4" borderColor={borderColor} opacity="0.3" display={{ base: 'none', md: 'block' }} />
             {!isCollapsed && (
               <Text px="6" fontSize="xs" color={secondaryTextColor} textTransform="uppercase" letterSpacing="wider" mb="2">
                 System
@@ -376,17 +376,18 @@ function Sidebar() {
       <Box display={{ base: 'block', md: 'none' }}>
         <Drawer
           isOpen={isOpen}
-          placement="left"
+          placement="top"
           onClose={onClose}
         >
           <DrawerOverlay />
           <DrawerContent 
             bg={bgColor}
-            transition="transform 0.3s ease-out"
+            transition="transform 0.15s ease-out"
+            w="100vw"
           >
-            <Box position="relative" h="full">
+            <Box position="relative" w="100vw" h="100vh" >
               <DrawerCloseButton color="white" />
-              <SidebarContent onClose={onClose} />
+              <SidebarContent onClose={onClose}/>
             </Box>
           </DrawerContent>
         </Drawer>
