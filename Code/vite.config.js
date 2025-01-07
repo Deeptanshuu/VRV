@@ -1,12 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import ReactComponentName from "react-scan/react-component-name/vite"; 
 
 export default defineConfig({
   base: '/',
   plugins: [
     react(),
-    ReactComponentName({}), 
   ],
   build: {
     rollupOptions: {
